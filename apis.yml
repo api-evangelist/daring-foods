@@ -1,10 +1,37 @@
 aid: daring-foods
 name: Daring Foods
-description: 'Daring Foods is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Daring Foods is an American plant-based food company, founded in 2018 by Ross Mackay and Eliott
+  Kessas, that makes 100% plant-based chicken from a deliberately short ingredient list with soy as
+  the protein base. Trading simply as "Daring", it sells retail Plant Chicken in shredded, diced and
+  breaded-pieces formats plus a line of ready-to-heat Plant Chicken Bowls and Plant Chicken Wings
+  through more than 15,000 US grocery stores, and runs a separate foodservice business supplying
+  bulk and gluten-free product to restaurants, campus dining and institutional kitchens. The company
+  raised over $120 million across 2020-2021 during the plant-based protein boom and was acquired by
+  the Australian plant-based meat manufacturer v2food in 2025, under which it retains its own brand.
+  Daring Foods is a consumer packaged goods business, not a software vendor: it operates no developer
+  program, publishes no product API, and offers no portal, SDKs or developer support. The only
+  machine-readable interface it exposes is the WordPress REST content API behind daring.com, which is
+  anonymously readable and unusually well-stocked for a CPG site - 208 recipes classified by cooking
+  method, 14 retail products, 7 foodservice products, 17 marketing pages and a 749-item media
+  library - captured here for discovery purposes.
 url: https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/apis.yml
+image: https://daring.com/wp-content/uploads/2023/06/cropped-favicon-6oi8ii-5-192x192.png
+accessModel:
+  pricing: none
+  onboarding: none
+  trial: false
+  try_now: true
+  public: true
+  label: Public read-only content API, no signup
+  confidence: high
+  source:
+  - authentication
+  generated: '2026-08-04'
+  method: derived
 x-type: company
 x-source: harvest:secondary-market
+x-secondary-market-listing: https://forgeglobal.com/daring-foods_stock/
 x-tier: stub
 x-tier-reason: harvest
 specificationVersion: '0.20'
@@ -12,12 +39,370 @@ created: '2026-08-04'
 modified: '2026-08-04'
 tags:
 - Company
-apis: []
+- Food
+- Consumer Packaged Goods
+- Plant Based
+- Alternative Protein
+- Food and Beverage
+- Recipes
+- Foodservice
+- Grocery
+- Content
+apis:
+- aid: daring-foods:daring-foods-recipes-api
+  name: Daring Foods Recipes API
+  description: >-
+    Public, unauthenticated read access to the Daring recipe library via the site's custom `recipes`
+    WordPress post type. Verified live at 208 published recipes, each classified by cooking method
+    through the shared `category` taxonomy. Recipe bodies live in Advanced Custom Fields, which this
+    host does not expose over REST.
+  humanURL: https://daring.com/recipes/
+  baseURL: https://daring.com/wp-json
+  tags:
+  - Recipes
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/daring-foods-recipes-api-openapi.yml
+  - type: Overlay
+    url: overlays/daring-foods-recipes-api-overlay.yaml
+  - type: Authentication
+    url: authentication/daring-foods-authentication.yml
+  - type: ErrorCatalog
+    url: errors/daring-foods-problem-types.yml
+  - type: Conventions
+    url: conventions/daring-foods-conventions.yml
+  - type: DataModel
+    url: data-model/daring-foods-data-model.yml
+  - type: Conformance
+    url: conformance/daring-foods-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/daring-foods-lifecycle.yml
+- aid: daring-foods:daring-foods-products-api
+  name: Daring Foods Retail Products API
+  description: >-
+    Public, unauthenticated read access to the Daring retail plant-chicken catalog via the custom
+    `products` post type - Original Shredded and Diced Plant Chicken, the Plant Chicken Bowl line,
+    Plant Chicken Wings and the Cajun/Teriyaki/Original Pieces. Verified live at 14 products. Not a
+    commerce, inventory or ordering API.
+  humanURL: https://daring.com/products/
+  baseURL: https://daring.com/wp-json
+  tags:
+  - Products
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/daring-foods-products-api-openapi.yml
+  - type: Overlay
+    url: overlays/daring-foods-products-api-overlay.yaml
+  - type: Authentication
+    url: authentication/daring-foods-authentication.yml
+  - type: ErrorCatalog
+    url: errors/daring-foods-problem-types.yml
+  - type: Conventions
+    url: conventions/daring-foods-conventions.yml
+  - type: DataModel
+    url: data-model/daring-foods-data-model.yml
+  - type: Conformance
+    url: conformance/daring-foods-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/daring-foods-lifecycle.yml
+- aid: daring-foods:daring-foods-foodservice-api
+  name: Daring Foods Foodservice Products API
+  description: >-
+    Public, unauthenticated read access to the Daring foodservice (B2B) product line via the custom
+    `foodservice-products` post type - the bulk and gluten-free product sold to restaurants, campus
+    dining and institutional kitchens. Verified live at 7 items.
+  humanURL: https://daring.com/foodservice/products/
+  baseURL: https://daring.com/wp-json
+  tags:
+  - Foodservice
+  - Products
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/daring-foods-foodservice-api-openapi.yml
+  - type: Overlay
+    url: overlays/daring-foods-foodservice-api-overlay.yaml
+  - type: Authentication
+    url: authentication/daring-foods-authentication.yml
+  - type: ErrorCatalog
+    url: errors/daring-foods-problem-types.yml
+  - type: Conventions
+    url: conventions/daring-foods-conventions.yml
+  - type: DataModel
+    url: data-model/daring-foods-data-model.yml
+  - type: Conformance
+    url: conformance/daring-foods-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/daring-foods-lifecycle.yml
+- aid: daring-foods:daring-foods-pages-api
+  name: Daring Foods Pages API
+  description: >-
+    Public, unauthenticated read access to the 17 static marketing pages of daring.com - Our Mission,
+    Ingredients, How To Cook, Locator, FAQ, Careers, Terms & Conditions and the Foodservice sub-tree.
+    Unlike the custom post types, pages return full rendered content.
+  humanURL: https://daring.com/
+  baseURL: https://daring.com/wp-json
+  tags:
+  - Pages
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/daring-foods-pages-api-openapi.yml
+  - type: Overlay
+    url: overlays/daring-foods-pages-api-overlay.yaml
+  - type: Authentication
+    url: authentication/daring-foods-authentication.yml
+  - type: ErrorCatalog
+    url: errors/daring-foods-problem-types.yml
+  - type: Conventions
+    url: conventions/daring-foods-conventions.yml
+  - type: DataModel
+    url: data-model/daring-foods-data-model.yml
+  - type: Conformance
+    url: conformance/daring-foods-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/daring-foods-lifecycle.yml
+- aid: daring-foods:daring-foods-media-api
+  name: Daring Foods Media API
+  description: >-
+    Public, unauthenticated read access to the media library behind daring.com - packaging and
+    product photography, recipe imagery and site assets. Verified live at 749 attachments, each with
+    every generated size variant and its own source URL.
+  humanURL: https://daring.com/
+  baseURL: https://daring.com/wp-json
+  tags:
+  - Media
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/daring-foods-media-api-openapi.yml
+  - type: Overlay
+    url: overlays/daring-foods-media-api-overlay.yaml
+  - type: Authentication
+    url: authentication/daring-foods-authentication.yml
+  - type: ErrorCatalog
+    url: errors/daring-foods-problem-types.yml
+  - type: Conventions
+    url: conventions/daring-foods-conventions.yml
+  - type: DataModel
+    url: data-model/daring-foods-data-model.yml
+  - type: Conformance
+    url: conformance/daring-foods-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/daring-foods-lifecycle.yml
+- aid: daring-foods:daring-foods-taxonomy-api
+  name: Daring Foods Taxonomy API
+  description: >-
+    Public, unauthenticated read access to the term taxonomies on daring.com. The `category`
+    taxonomy is shared between posts and recipes and on this site carries cooking methods - Saute,
+    Oven Baked, Air Fry, Microwave, Pan Fry, Grill Pan, Dutch Oven, Braise - which is what makes the
+    recipe library queryable by how a dish is cooked.
+  humanURL: https://daring.com/recipes/
+  baseURL: https://daring.com/wp-json
+  tags:
+  - Taxonomy
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/daring-foods-taxonomy-api-openapi.yml
+  - type: Overlay
+    url: overlays/daring-foods-taxonomy-api-overlay.yaml
+  - type: Authentication
+    url: authentication/daring-foods-authentication.yml
+  - type: ErrorCatalog
+    url: errors/daring-foods-problem-types.yml
+  - type: Conventions
+    url: conventions/daring-foods-conventions.yml
+  - type: Conformance
+    url: conformance/daring-foods-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/daring-foods-lifecycle.yml
+- aid: daring-foods:daring-foods-search-api
+  name: Daring Foods Search API
+  description: >-
+    Public, unauthenticated cross-content search over daring.com, returning lightweight
+    id / title / url / type / subtype records spanning recipes, retail products, foodservice
+    products, pages and posts in a single call.
+  humanURL: https://daring.com/
+  baseURL: https://daring.com/wp-json
+  tags:
+  - Search
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/daring-foods-search-api-openapi.yml
+  - type: Overlay
+    url: overlays/daring-foods-search-api-overlay.yaml
+  - type: Authentication
+    url: authentication/daring-foods-authentication.yml
+  - type: ErrorCatalog
+    url: errors/daring-foods-problem-types.yml
+  - type: Conventions
+    url: conventions/daring-foods-conventions.yml
+  - type: Conformance
+    url: conformance/daring-foods-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/daring-foods-lifecycle.yml
+- aid: daring-foods:daring-foods-discovery-api
+  name: Daring Foods Discovery API
+  description: >-
+    The self-describing metadata layer - route index (222 routes across 10 namespaces), registered
+    post types, taxonomies, statuses and authors - that makes the whole daring.com surface
+    machine-readable without prior knowledge.
+  humanURL: https://daring.com/wp-json/
+  baseURL: https://daring.com/wp-json
+  tags:
+  - Discovery
+  - Metadata
+  properties:
+  - type: OpenAPI
+    url: openapi/daring-foods-discovery-api-openapi.yml
+  - type: Overlay
+    url: overlays/daring-foods-discovery-api-overlay.yaml
+  - type: Authentication
+    url: authentication/daring-foods-authentication.yml
+  - type: ErrorCatalog
+    url: errors/daring-foods-problem-types.yml
+  - type: Conventions
+    url: conventions/daring-foods-conventions.yml
+  - type: Conformance
+    url: conformance/daring-foods-conformance.yml
+- aid: daring-foods:daring-foods-posts-api
+  name: Daring Foods Posts API
+  description: >-
+    Public, unauthenticated read access to the standard WordPress `post` collection and its comment
+    thread. Daring Foods runs no editorial blog - the collection holds one post, the WordPress
+    install default - but the site RSS feed is built from it.
+  humanURL: https://daring.com/feed/
+  baseURL: https://daring.com/wp-json
+  tags:
+  - Posts
+  - Comments
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/daring-foods-posts-api-openapi.yml
+  - type: Overlay
+    url: overlays/daring-foods-posts-api-overlay.yaml
+  - type: Authentication
+    url: authentication/daring-foods-authentication.yml
+  - type: ErrorCatalog
+    url: errors/daring-foods-problem-types.yml
+  - type: Conventions
+    url: conventions/daring-foods-conventions.yml
+  - type: Conformance
+    url: conformance/daring-foods-conformance.yml
+- aid: daring-foods:daring-foods-oembed-api
+  name: Daring Foods oEmbed API
+  description: >-
+    Public oEmbed 1.0 provider endpoint for daring.com URLs, returning embeddable rich metadata -
+    title, author, thumbnail and iframe markup - for any recipe, product or marketing page in a
+    single unauthenticated call. Answers in both JSON and XML.
+  humanURL: https://daring.com/
+  baseURL: https://daring.com/wp-json
+  tags:
+  - oEmbed
+  - Metadata
+  properties:
+  - type: OpenAPI
+    url: openapi/daring-foods-oembed-api-openapi.yml
+  - type: Overlay
+    url: overlays/daring-foods-oembed-api-overlay.yaml
+  - type: Authentication
+    url: authentication/daring-foods-authentication.yml
+  - type: ErrorCatalog
+    url: errors/daring-foods-problem-types.yml
+  - type: Conformance
+    url: conformance/daring-foods-conformance.yml
+- aid: daring-foods:daring-foods-seo-api
+  name: Daring Foods SEO Metadata API
+  description: >-
+    Public Yoast SEO head endpoint returning the rendered SEO metadata and full schema.org JSON-LD
+    graph for any daring.com URL - the most structured description of a Daring recipe or product
+    available from this host.
+  humanURL: https://daring.com/
+  baseURL: https://daring.com/wp-json
+  tags:
+  - SEO
+  - Metadata
+  - JSON-LD
+  properties:
+  - type: OpenAPI
+    url: openapi/daring-foods-seo-api-openapi.yml
+  - type: Overlay
+    url: overlays/daring-foods-seo-api-overlay.yaml
+  - type: Authentication
+    url: authentication/daring-foods-authentication.yml
+  - type: ErrorCatalog
+    url: errors/daring-foods-problem-types.yml
+  - type: Conformance
+    url: conformance/daring-foods-conformance.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/daring-foods-domain-security.yml
+- type: AgenticAccess
+  url: agentic-access/daring-foods-agentic-access.yml
 - type: Website
-  url: https://forgeglobal.com/daring-foods_stock/
+  url: https://daring.com/
+- type: About
+  url: https://daring.com/our-mission/
+- type: Support
+  url: https://daring.com/faq/
+- type: FAQ
+  url: https://daring.com/faq/
+- type: Careers
+  url: https://daring.com/careers/
+- type: TermsOfService
+  url: https://daring.com/terms-and-conditions/
+- type: PrivacyPolicy
+  url: https://privacy.daring.com/privacy-policy
+- type: Accessibility
+  url: https://daring.com/accessibility-statement/
+- type: BlogRSS
+  url: https://daring.com/feed/
+- type: Instagram
+  url: https://www.instagram.com/daringfoods/
+- type: Facebook
+  url: https://www.facebook.com/daringfoods/
+- type: Twitter
+  url: https://twitter.com/daringfoods
+- type: TikTok
+  url: https://www.tiktok.com/@daringfoods
+- type: LinkedIn
+  url: https://www.linkedin.com/company/daringfoods
+- type: Authentication
+  url: authentication/daring-foods-authentication.yml
+- type: ErrorCatalog
+  url: errors/daring-foods-problem-types.yml
+- type: Conventions
+  url: conventions/daring-foods-conventions.yml
+- type: DataModel
+  url: data-model/daring-foods-data-model.yml
+- type: Conformance
+  url: conformance/daring-foods-conformance.yml
+- type: Lifecycle
+  url: lifecycle/daring-foods-lifecycle.yml
+- type: WellKnown
+  url: well-known/daring-foods-well-known.yml
+- type: Examples
+  url: examples/daring-foods-examples.yml
+- type: LLMsTxt
+  url: llms/daring-foods-llms.txt
+- type: MCPServer
+  url: mcp/daring-foods-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/daring-foods-tool-crosswalk.yml
+- type: AgentSkill
+  url: skills/_index.yml
+x-enrichment:
+  date: '2026-08-04'
+  status: enriched
+  artifacts_added: 40
+  pass: local-v1

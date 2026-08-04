@@ -1,0 +1,210 @@
+generated: '2026-08-04'
+method: derived
+source: >-
+  Derived from the schemas and id-reference fields in openapi/daring-foods-*-openapi.yml, from the
+  live /wp/v2/types and /wp/v2/taxonomies metadata, and from the `_links` relations returned on
+  live records.
+summary: >-
+  A content graph, not a business-domain graph. Nine entities: three custom content types that
+  carry Daring's actual catalog (Product, Recipe, FoodserviceProduct), the two WordPress core
+  content types (Page, Post), a shared Media library, a shared Category taxonomy, Comment, and
+  User. The interesting shape is that `category` is attached to BOTH `post` and `recipes` and on
+  this site holds cooking methods rather than editorial subjects, which makes Recipe -> Category
+  the only real classification edge in the model. Every relationship below is an integer id
+  reference resolvable through a documented operation.
+id_scheme:
+  type: integer
+  scope: site-wide
+  detail: >-
+    WordPress uses one auto-incrementing ID space shared across every post type and the media
+    library, so a Recipe id and a MediaItem id are drawn from the same sequence and never collide.
+    Taxonomy terms and users have their own separate sequences. There are no typed id prefixes.
+entities:
+- name: Product
+  post_type: products
+  count: 14
+  collection: /wp/v2/products
+  operations: [listProducts, getProduct]
+  spec: openapi/daring-foods-products-api-openapi.yml
+  key_fields: [id, slug, title.rendered, link, date, modified, featured_media, status, type]
+  note: Retail plant-chicken catalog. Attribute data (nutrition, ingredients) is in ACF and not exposed.
+- name: Recipe
+  post_type: recipes
+  count: 208
+  collection: /wp/v2/recipes
+  operations: [listRecipes, getRecipe]
+  spec: openapi/daring-foods-recipes-api-openapi.yml
+  key_fields: [id, slug, title.rendered, link, date, modified, featured_media, categories, status, type]
+  note: The largest collection on the host and the only one with a classification edge.
+- name: FoodserviceProduct
+  post_type: foodservice-products
+  count: 7
+  collection: /wp/v2/foodservice-products
+  operations: [listFoodserviceProducts, getFoodserviceProduct]
+  spec: openapi/daring-foods-foodservice-api-openapi.yml
+  key_fields: [id, slug, title.rendered, link, date, modified, featured_media, status, type]
+  note: B2B line. Structurally identical to Product; a separate post type, not a Product variant.
+- name: Page
+  post_type: page
+  count: 17
+  collection: /wp/v2/pages
+  operations: [listPages, getPage]
+  spec: openapi/daring-foods-pages-api-openapi.yml
+  key_fields: [id, slug, title.rendered, content.rendered, link, parent, menu_order]
+  note: The only collection that returns full rendered body content.
+- name: Post
+  post_type: post
+  count: 1
+  collection: /wp/v2/posts
+  operations: [listPosts, getPost]
+  spec: openapi/daring-foods-posts-api-openapi.yml
+  key_fields: [id, slug, title.rendered, content.rendered, excerpt.rendered, author, categories, tags]
+  note: Effectively unused - the WordPress install default.
+- name: MediaItem
+  post_type: attachment
+  count: 749
+  collection: /wp/v2/media
+  operations: [listMedia, getMediaItem]
+  spec: openapi/daring-foods-media-api-openapi.yml
+  key_fields: [id, source_url, mime_type, media_type, alt_text, filename, filesize, media_details.sizes, post]
+  note: Shared image library. The join target for every featured_media reference.
+- name: Category
+  taxonomy: category
+  count: 9
+  collection: /wp/v2/categories
+  operations: [listCategories, getCategory]
+  spec: openapi/daring-foods-taxonomy-api-openapi.yml
+  key_fields: [id, name, slug, count, parent, taxonomy, link]
+  terms:
+  - {id: 3, slug: saute, name: "Saute", count: 22}
+  - {id: 4, slug: oven-baked, name: Oven Baked, count: 13}
+  - {id: 15, slug: air-fry, name: Air Fry, count: 7}
+  - {id: 17, slug: microwave, name: Microwave, count: 7}
+  - {id: 5, slug: grill-pan, name: Grill Pan, count: 5}
+  - {id: 6, slug: pan-fry, name: Pan Fry, count: 5}
+  - {id: 7, slug: dutch-oven, name: Dutch Oven, count: 1}
+  - {id: 16, slug: braise, name: Braise, count: 1}
+  - {id: 1, slug: uncategorized, name: Uncategorized, count: 4}
+  note: >-
+    On this site the category taxonomy is a COOKING METHOD vocabulary, not a subject taxonomy.
+    Term counts sum to 65 against 208 recipes, so roughly two thirds of the library is unclassified.
+- name: Tag
+  taxonomy: post_tag
+  count: 0
+  collection: /wp/v2/tags
+  operations: [listTags, getTag]
+  note: Registered but empty. Recorded rather than omitted so a consumer knows not to build on it.
+- name: Comment
+  count: 41
+  collection: /wp/v2/comments
+  operations: [listComments, getComment]
+  spec: openapi/daring-foods-posts-api-openapi.yml
+  key_fields: [id, post, parent, author, author_name, date, status]
+  note: All attached to the single default post; predominantly automated spam.
+- name: User
+  count: 3
+  collection: /wp/v2/users
+  operations: [listUsers, getUser]
+  spec: openapi/daring-foods-discovery-api-openapi.yml
+  key_fields: [id, name, slug, link]
+  note: Content authors, public fields only.
+relationships:
+- from: Recipe
+  to: Category
+  kind: has_many
+  via: categories
+  resolve: GET /wp/v2/categories/{id}
+  inverse_query: GET /wp/v2/recipes?categories={id}
+  note: The one classification edge in the model - recipe to cooking method.
+- from: Post
+  to: Category
+  kind: has_many
+  via: categories
+  resolve: GET /wp/v2/categories/{id}
+- from: Post
+  to: Tag
+  kind: has_many
+  via: tags
+  resolve: GET /wp/v2/tags/{id}
+  note: Always empty on this site.
+- from: Product
+  to: MediaItem
+  kind: has_one
+  via: featured_media
+  resolve: GET /wp/v2/media/{id}
+  shortcut: append _embed to inline the media record
+- from: Recipe
+  to: MediaItem
+  kind: has_one
+  via: featured_media
+  resolve: GET /wp/v2/media/{id}
+  shortcut: append _embed to inline the media record
+- from: FoodserviceProduct
+  to: MediaItem
+  kind: has_one
+  via: featured_media
+  resolve: GET /wp/v2/media/{id}
+- from: Page
+  to: MediaItem
+  kind: has_one
+  via: featured_media
+  resolve: GET /wp/v2/media/{id}
+- from: Post
+  to: MediaItem
+  kind: has_one
+  via: featured_media
+  resolve: GET /wp/v2/media/{id}
+- from: MediaItem
+  to: Product|Recipe|FoodserviceProduct|Page|Post
+  kind: belongs_to
+  via: post
+  resolve: the parent object's own collection endpoint
+  note: Polymorphic - `post` holds an id from the shared sequence with no type discriminator on the media record itself.
+- from: Page
+  to: Page
+  kind: belongs_to
+  via: parent
+  resolve: GET /wp/v2/pages/{id}
+  note: The Foodservice sub-tree (Products, Mission, How To Cook, Support, Store Locator) hangs off page 15.
+- from: Comment
+  to: Post
+  kind: belongs_to
+  via: post
+  resolve: GET /wp/v2/posts/{id}
+- from: Comment
+  to: Comment
+  kind: belongs_to
+  via: parent
+  resolve: GET /wp/v2/comments/{id}
+- from: Post
+  to: User
+  kind: belongs_to
+  via: author
+  resolve: GET /wp/v2/users/{id}
+- from: Category
+  to: Category
+  kind: belongs_to
+  via: parent
+  resolve: GET /wp/v2/categories/{id}
+  note: Hierarchical taxonomy, but all 9 terms on this site are top-level (parent 0).
+cross_type_index:
+  entity: SearchResult
+  collection: /wp/v2/search
+  operation: searchSiteContent
+  note: >-
+    Not an entity of its own - a projection over Product, Recipe, FoodserviceProduct, Page and Post
+    returning {id, title, url, type, subtype}. `subtype` is the type discriminator that tells a
+    consumer which collection to resolve the id against, which makes it the correct entry point
+    for keyword-driven traversal of the graph.
+gaps:
+- >-
+  There is NO relationship between Recipe and Product. A recipe does not reference the Daring
+  product it uses in any machine-readable field - that association exists only in the rendered
+  page body. This is the most consequential missing edge in the model.
+- >-
+  Product and FoodserviceProduct carry no SKU, GTIN, UPC, price, nutrition, allergen or
+  availability field. Everything a food-data consumer would want is in ACF and unexposed.
+- >-
+  There is no store/retailer entity. The store locator at https://daring.com/locator/ is a
+  third-party embed and is not part of this REST surface.
+render: null

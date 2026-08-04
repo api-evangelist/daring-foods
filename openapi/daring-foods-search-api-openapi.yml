@@ -1,0 +1,321 @@
+openapi: 3.1.0
+info:
+  title: Daring Foods Search API
+  version: wp/v2
+  summary: Public cross-content search over recipes, products, pages and posts.
+  description: Public, unauthenticated cross-content search over daring.com via the WordPress core search controller.
+    A single query returns lightweight {id, title, url, type, subtype} records spanning every searchable post type
+    on the site - `recipes`, `products`, `foodservice-products`, `page` and `post` - with `subtype` carrying which
+    collection each hit came from, so a result can be resolved back to its full record through the matching collection
+    endpoint. This is the cheapest single call for an agent that wants to find Daring content by keyword without
+    walking 208 recipes page by page.
+  contact:
+    name: Daring Foods
+    url: https://daring.com/faq/
+  license:
+    name: Site content - all rights reserved; see Terms & Conditions
+    url: https://daring.com/terms-and-conditions/
+  x-apis-io-provenance:
+    method: derived
+    source: https://daring.com/wp-json/
+    derived_on: '2026-08-04'
+    note: Routes enumerated from the live WordPress route index at https://daring.com/wp-json/ (222 routes across
+      10 namespaces) on 2026-08-04, then probed anonymously one at a time; only routes verified to return HTTP 200
+      without credentials are documented here. Schemas reflect fields observed in the live responses. Write methods
+      exist on the same routes but require WordPress authentication (cookie + X-WP-Nonce, or Application Passwords)
+      and return HTTP 401 anonymously, so they are not documented. No fabricated operations, parameters or fields.
+servers:
+- url: https://daring.com/wp-json
+  description: Production
+tags:
+- name: Search
+  description: Cross-content keyword search.
+paths:
+  /wp/v2/search:
+    get:
+      tags:
+      - Search
+      operationId: searchSiteContent
+      summary: Search site content
+      description: Returns matches across all searchable post types. Narrow with `subtype` to search only recipes
+        or only products.
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      - $ref: '#/components/parameters/search'
+      - $ref: '#/components/parameters/fields'
+      - name: type
+        in: query
+        description: Limit results to a search object type.
+        schema:
+          type: string
+          enum:
+          - post
+          - term
+          - post-format
+          default: post
+      - name: subtype
+        in: query
+        description: 'Limit results to specific post types. Verified values on this site: recipes, products, foodservice-products,
+          page, post; `any` searches all.'
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - any
+            - recipes
+            - products
+            - foodservice-products
+            - page
+            - post
+      - name: exclude
+        in: query
+        description: Ensure result set excludes specific IDs.
+        schema:
+          type: array
+          items:
+            type: integer
+      - name: include
+        in: query
+        description: Limit result set to specific IDs.
+        schema:
+          type: array
+          items:
+            type: integer
+      responses:
+        '200':
+          description: A page of search results.
+          headers:
+            X-WP-Total:
+              $ref: '#/components/headers/XWPTotal'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/XWPTotalPages'
+            Link:
+              $ref: '#/components/headers/LinkPagination'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SearchResult'
+              example:
+              - id: 1647
+                title: Crispy Buffalo Plant Chicken Quesadillas
+                url: https://daring.com/recipes/crispy-buffalo-plant-chicken-quesadillas/
+                type: post
+                subtype: recipes
+              - id: 1621
+                title: SUPER(bowl) Spicy Buffalo Plant Chicken Salad
+                url: https://daring.com/recipes/superbowl-spicy-buffalo-plant-chicken-salad/
+                type: post
+                subtype: recipes
+        '400':
+          description: Invalid request parameter (rest_invalid_param).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: rest_invalid_param
+                message: 'Invalid parameter(s): per_page'
+                data:
+                  status: 400
+                  params:
+                    per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+components:
+  parameters:
+    page:
+      name: page
+      in: query
+      description: Current page of the collection (1-based).
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    perPage:
+      name: per_page
+      in: query
+      description: Maximum number of items returned per page. Verified server cap is 100; a larger value returns
+        HTTP 400 rest_invalid_param.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a free-text string.
+      schema:
+        type: string
+    order:
+      name: order
+      in: query
+      description: Sort direction.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: desc
+    orderby:
+      name: orderby
+      in: query
+      description: Field to sort the collection by.
+      schema:
+        type: string
+        enum:
+        - date
+        - id
+        - include
+        - modified
+        - relevance
+        - slug
+        - title
+        default: date
+    context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines the fields present in the response. Anonymous
+        callers may use `view` and `embed` only - `edit` returns HTTP 401.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        default: view
+    fields:
+      name: _fields
+      in: query
+      description: Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress
+        core response-shaping convention, verified working on this host.
+      schema:
+        type: string
+    embed:
+      name: _embed
+      in: query
+      description: Inline embeddable linked resources (featured media, terms, author) into an `_embedded` object.
+      schema:
+        type: boolean
+    slugFilter:
+      name: slug
+      in: query
+      description: Limit results to items with one of the given slugs.
+      schema:
+        type: array
+        items:
+          type: string
+    include:
+      name: include
+      in: query
+      description: Limit result set to specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
+    exclude:
+      name: exclude
+      in: query
+      description: Ensure result set excludes specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
+    offset:
+      name: offset
+      in: query
+      description: Offset the result set by a specific number of items.
+      schema:
+        type: integer
+        minimum: 0
+    idPath:
+      name: id
+      in: path
+      required: true
+      description: Unique numeric identifier for the object.
+      schema:
+        type: integer
+  headers:
+    XWPTotal:
+      description: Total number of items in the unpaginated collection.
+      schema:
+        type: integer
+    XWPTotalPages:
+      description: Total number of pages available at the requested per_page size.
+      schema:
+        type: integer
+    LinkPagination:
+      description: RFC 8288 Link header carrying `prev` and `next` relations for the collection.
+      schema:
+        type: string
+    CacheControl:
+      description: 'Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable:
+        SHORT).'
+      schema:
+        type: string
+  schemas:
+    Error:
+      type: object
+      description: 'The WordPress REST error envelope. NOTE: this is NOT RFC 9457 problem+json - the media type
+        is application/json and the shape is {code, message, data}.'
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable WordPress error code, e.g. rest_post_invalid_id, rest_invalid_param, rest_no_route.
+          examples:
+          - rest_post_invalid_id
+        message:
+          type: string
+          description: Human-readable error message.
+          examples:
+          - Invalid post ID.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code, repeated in the body.
+              examples:
+              - 404
+            params:
+              type: object
+              additionalProperties:
+                type: string
+              description: 'Present on rest_invalid_param: per-parameter validation messages.'
+            details:
+              type: object
+              description: 'Present on rest_invalid_param: per-parameter structured detail.'
+    SearchResult:
+      type: object
+      description: A lightweight search result.
+      properties:
+        id:
+          type: integer
+          description: ID of the matched object within its own collection.
+        title:
+          type: string
+          description: Plain-text title of the match.
+        url:
+          type: string
+          format: uri
+          description: Public URL of the match on daring.com.
+        type:
+          type: string
+          description: Search object type.
+          examples:
+          - post
+        subtype:
+          type: string
+          description: The post type the match belongs to - recipes, products, foodservice-products, page or post.
+          examples:
+          - recipes
+        _links:
+          type: object
+          description: Includes a `self` link with the collection endpoint that returns the full record.

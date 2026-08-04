@@ -1,0 +1,93 @@
+generated: '2026-08-04'
+method: derived
+status: candidate
+source: openapi/daring-foods-*-openapi.yml
+searched:
+  official_server: false
+  detail: >-
+    Searched for an official hosted or remote MCP server for Daring Foods - the docs surface (there
+    is none), the npm @modelcontextprotocol namespace, public MCP registries, and mcp.daring.com /
+    api.daring.com (neither resolves in DNS). Nothing exists. Daring Foods is a consumer packaged
+    goods brand with no developer program, so the absence is expected.
+server:
+  name: daring-foods
+  transport: http
+  url: null
+  published: false
+  note: >-
+    NO server is published by Daring Foods. The tools below are a CANDIDATE set derived by API
+    Evangelist from the 31 verified operations in openapi/, showing what an MCP server over this
+    surface would expose. Each tool inherits its real input schema from the backing OpenAPI
+    operation's parameters. Nothing here is served by the provider.
+rationale: >-
+  Worth deriving despite the provider's disinterest: this is a read-only, unauthenticated, well
+  paginated catalog of 208 recipes and 21 products, which is close to the ideal shape for an agent
+  tool. The two things that would make it genuinely useful - recipe steps and product nutrition -
+  are the two things ACF withholds, so a candidate server built on it can find and cite Daring
+  content but cannot answer a nutrition or how-do-I-cook-it question without fetching the rendered
+  page.
+tools:
+- name: search_daring_content
+  description: Search recipes, products, foodservice products and pages by keyword; returns id, title, url and the collection each hit belongs to.
+  source_operation: openapi/daring-foods-search-api-openapi.yml#searchSiteContent
+  read_only: true
+- name: list_recipes
+  description: List Daring recipes, optionally filtered by cooking-method category, with pagination.
+  source_operation: openapi/daring-foods-recipes-api-openapi.yml#listRecipes
+  read_only: true
+- name: get_recipe
+  description: Retrieve one recipe by id, optionally embedding its featured image and categories.
+  source_operation: openapi/daring-foods-recipes-api-openapi.yml#getRecipe
+  read_only: true
+- name: list_cooking_methods
+  description: List the cooking-method taxonomy terms (Sauté, Oven Baked, Air Fry, Microwave, Pan Fry, Grill Pan, Dutch Oven, Braise) with recipe counts.
+  source_operation: openapi/daring-foods-taxonomy-api-openapi.yml#listCategories
+  read_only: true
+- name: list_products
+  description: List the Daring retail plant-chicken product catalog.
+  source_operation: openapi/daring-foods-products-api-openapi.yml#listProducts
+  read_only: true
+- name: get_product
+  description: Retrieve one retail product by id.
+  source_operation: openapi/daring-foods-products-api-openapi.yml#getProduct
+  read_only: true
+- name: list_foodservice_products
+  description: List the Daring foodservice (B2B) product line.
+  source_operation: openapi/daring-foods-foodservice-api-openapi.yml#listFoodserviceProducts
+  read_only: true
+- name: get_foodservice_product
+  description: Retrieve one foodservice product by id.
+  source_operation: openapi/daring-foods-foodservice-api-openapi.yml#getFoodserviceProduct
+  read_only: true
+- name: list_pages
+  description: List the static marketing pages of daring.com.
+  source_operation: openapi/daring-foods-pages-api-openapi.yml#listPages
+  read_only: true
+- name: get_page
+  description: Retrieve one marketing page by id including its full rendered body - the way to read Daring's own ingredient, mission and foodservice statements.
+  source_operation: openapi/daring-foods-pages-api-openapi.yml#getPage
+  read_only: true
+- name: get_media
+  description: Resolve a featured_media id to the image record, including every generated size variant and its source URL.
+  source_operation: openapi/daring-foods-media-api-openapi.yml#getMediaItem
+  read_only: true
+- name: get_page_seo_metadata
+  description: Get the schema.org JSON-LD graph and SEO head metadata for any daring.com URL - the most structured description of a recipe or product this host offers.
+  source_operation: openapi/daring-foods-seo-api-openapi.yml#getSeoHead
+  read_only: true
+- name: get_embed_card
+  description: Resolve any daring.com URL to oEmbed 1.0 rich metadata (title, author, thumbnail, iframe markup).
+  source_operation: openapi/daring-foods-oembed-api-openapi.yml#getOEmbed
+  read_only: true
+constraints:
+  authentication: none
+  write_tools: 0
+  note: >-
+    Every candidate tool is read-only. The write half of the WordPress surface is credential-gated
+    (HTTP 401 anonymously) and is deliberately excluded - a server over this surface should never
+    expose it.
+  rate_guidance: >-
+    Responses are edge-cached for 600s and robots.txt requests Crawl-delay 10. A server should
+    cache for at least 10 minutes and self-throttle; no RateLimit headers are returned and
+    Cloudflare may throttle without signal.
+crosswalk: mcp/daring-foods-tool-crosswalk.yml

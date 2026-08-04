@@ -1,0 +1,76 @@
+generated: '2026-08-04'
+method: probed
+source: >-
+  Searched daring.com and its subdomains for a versioning policy, deprecation policy, SLA, status
+  page and changelog on 2026-08-04; derived the versioning facts from the live route index.
+summary: >-
+  Daring Foods publishes no API lifecycle commitments of any kind. This is expected and is recorded
+  as measured absence, not as a defect the provider hid: the company is a plant-based food brand
+  with no developer program, and the REST surface captured in this repo is the incidental output of
+  its WordPress CMS. Every field below that is null was searched for and not found.
+versioning:
+  scheme: uri-path-namespace
+  current: wp/v2
+  owner: WordPress core (not Daring Foods)
+  policy_url: null
+  detail: >-
+    The version namespace belongs to WordPress, advances on WordPress's release schedule, and is
+    not something Daring Foods manages or announces. Plugin namespaces on this host version
+    independently: oembed/1.0, yoast/v1, redirection/v1, genesisblocks/v1, wpe/cache-plugin/v1,
+    wpe_sign_on_plugin/v1, wp-site-health/v1, wp-block-editor/v1, wp-abilities/v1.
+  stability_risk: >-
+    The three collections that carry all the value on this host - `products`, `recipes` and
+    `foodservice-products` - are CUSTOM post types registered by the site's theme or a plugin, not
+    WordPress core. Their route paths, their presence in /wp/v2/types, and whether they stay
+    publicly readable at all are a site-configuration detail that can change with any theme or
+    plugin change, silently and without notice. Treat them as unstable.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  detail: No deprecation policy, no Sunset or Deprecation response headers observed, no notice channel.
+deprecated_operations: []
+sla:
+  url: null
+  uptime_target: null
+  detail: No SLA, no uptime commitment, no support contract for API consumers.
+status_page:
+  url: null
+  detail: >-
+    Searched status.daring.com (no DNS record), daring.com/status and the site footer. No status
+    page exists. Infrastructure status would be WP Engine's and Cloudflare's, neither of which is
+    scoped to this site. No StatusPage pointer is emitted for this provider.
+changelog:
+  url: null
+  detail: >-
+    No changelog. The nearest thing to a change signal is the `modified` timestamp on each record
+    and the Yoast sitemap index at https://daring.com/sitemap_index.xml, which carries per-section
+    lastmod dates.
+support:
+  api_support: null
+  general_support:
+    faq: https://daring.com/faq/
+    email: hello@daring.com
+    sms: 1-855-UNCLUCK (855-862-5825)
+    foodservice: https://daring.com/foodservice/support/
+  detail: >-
+    Consumer support channels only. There is no developer support channel, no forum, no issue
+    tracker and no contact who would recognize a question about this API.
+observed_content_cadence:
+  newest_recipe: '2026-06-23'
+  newest_product: '2025-11-03'
+  newest_post: '2023-05-29'
+  detail: >-
+    Content changes on the order of weeks to months. A consumer of this API can safely refresh
+    daily; there is no need for anything more aggressive, and the 10-minute edge cache plus the
+    robots.txt Crawl-delay of 10 seconds bound how fast it is polite to poll.
+corporate_lifecycle:
+  founded: 2018
+  founders: [Ross Mackay, Eliott Kessas]
+  acquired_by: v2food (Australia)
+  acquired: 2025
+  note: >-
+    Daring Foods was acquired by v2food in 2025 and continues to operate under its own brand. An
+    acquisition is a live risk to a CMS-incidental API surface: a brand migration onto the
+    acquirer's platform would remove these routes without any deprecation signal.

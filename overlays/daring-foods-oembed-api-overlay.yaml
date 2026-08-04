@@ -1,0 +1,50 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Daring Foods oEmbed API
+  version: 1.0.0
+extends: openapi/daring-foods-oembed-api-openapi.yml
+x-apis-io-provenance:
+  method: generated
+  generated: '2026-08-04'
+  source: openapi/daring-foods-oembed-api-openapi.yml
+  note: Captures the API Evangelist enrichment layer applied on top of the derived contract for the Daring Foods
+    WordPress REST surface. The underlying openapi/ document is itself derived from the live route index at https://daring.com/wp-json/;
+    this overlay records our catalog metadata and consumption guidance separately so the derived contract stays
+    clean.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: daring-foods
+    x-apievangelist-provider-name: Daring Foods
+    x-apievangelist-industry: Food & Beverage / Consumer Packaged Goods
+    x-apievangelist-surface-class: incidental-cms
+    x-apievangelist-note: 'Daring Foods is a consumer packaged goods brand - plant-based chicken sold in grocery
+      and foodservice - with no developer program, no API product, no portal, no SDKs and no support channel for
+      API consumers. This is the WordPress content API behind daring.com, publicly readable but entirely unmanaged
+      by the provider: no versioning policy beyond WordPress core''s own wp/v2, no deprecation policy, no status
+      page, no published rate limits and no terms governing programmatic use beyond the site Terms & Conditions.'
+- target: $.info
+  update:
+    x-apievangelist-artifacts:
+      authentication: authentication/daring-foods-authentication.yml
+      conventions: conventions/daring-foods-conventions.yml
+      errors: errors/daring-foods-problem-types.yml
+      lifecycle: lifecycle/daring-foods-lifecycle.yml
+      conformance: conformance/daring-foods-conformance.yml
+      data_model: data-model/daring-foods-data-model.yml
+      well_known: well-known/daring-foods-well-known.yml
+      examples: examples/daring-foods-examples.yml
+- target: $.info
+  update:
+    x-apievangelist-consumption-guidance: 'Authentication: none required for any documented operation; every write
+      route returns HTTP 401 anonymously and WordPress Application Passwords is the advertised credential mechanism.
+      Pagination: page/per_page with X-WP-Total, X-WP-TotalPages and an RFC 8288 Link header; per_page is hard-capped
+      at 100 (101 returns rest_invalid_param). Response shaping: _fields trims the payload, _embed inlines featured
+      media and terms. Caching: responses carry Cache-Control max-age=600 behind a WP Engine edge cache - poll no
+      faster. Rate limits: none signalled; robots.txt requests a 10-second crawl delay, so self-throttle. Errors:
+      the WordPress {code, message, data.status} envelope, NOT RFC 9457 problem+json. Advanced Custom Fields are
+      registered but empty over REST on this host, so nutrition, ingredient and recipe-step data are not available
+      programmatically.'
+- target: $.tags[?(@.name=='oEmbed')]
+  update:
+    x-apievangelist-tag-summary: oEmbed 1.0 provider endpoint.

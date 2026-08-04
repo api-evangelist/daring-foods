@@ -1,0 +1,62 @@
+generated: '2026-08-04'
+method: probed
+source: https://daring.com/.well-known/
+host: https://daring.com
+summary: >-
+  Every RFC 8615 /.well-known/ discovery document was probed against daring.com and every one
+  missed. The site is a WordPress install on WP Engine fronted by Cloudflare with a catch-all 404
+  handler, so /.well-known/* paths return the site's HTML 404 page rather than a document - each
+  row below records the observed status and whether the body was HTML (a catch-all response) or a
+  genuine document. Only robots.txt, sitemap.xml and the WordPress REST route index exist as
+  machine-readable discovery surfaces on this host. Absence here is expected and valid: Daring
+  Foods is a consumer packaged goods brand with no developer program, no OAuth surface, no
+  security.txt and no agent card.
+documents:
+- path: /.well-known/security.txt
+  status: 404
+  note: RFC 9116. Nginx 404, not the WordPress catch-all - no security.txt is published.
+- path: /.well-known/openid-configuration
+  status: 404
+  note: OIDC discovery. Returns the site HTML 404 page; no OIDC provider.
+- path: /.well-known/oauth-authorization-server
+  status: 404
+  note: RFC 8414. Returns the site HTML 404 page; no OAuth authorization server.
+- path: /.well-known/api-catalog
+  status: 404
+  note: RFC 9727. Returns the site HTML 404 page.
+- path: /.well-known/ai-plugin.json
+  status: 404
+  note: Returns the site HTML 404 page.
+- path: /.well-known/agent-card.json
+  status: 404
+  note: A2A 1.0.0 canonical path. Returns the site HTML 404 page; no agent card is published.
+- path: /.well-known/agent.json
+  status: 404
+  note: A2A pre-0.3 legacy path. Returns the site HTML 404 page; no agent card is published.
+other_discovery:
+- path: /robots.txt
+  status: 200
+  file: daring-foods-robots.txt
+  note: >-
+    Yoast-generated. Allows all user agents with a site-wide `Disallow:` (empty, i.e. nothing
+    disallowed) and requests `Crawl-delay: 10`, which is the only rate guidance the provider
+    publishes anywhere - treat it as the throttle for programmatic use of the REST API too.
+- path: /sitemap.xml
+  status: 200
+  note: Redirects to the Yoast sitemap index at https://daring.com/sitemap_index.xml.
+- path: /wp-json/
+  status: 200
+  note: >-
+    The WordPress REST route index - the real machine-readable discovery document on this host.
+    222 routes across 10 namespaces, with an `authentication` block advertising Application
+    Passwords. Captured as openapi/daring-foods-discovery-api-openapi.yml.
+- path: /feed/
+  status: 200
+  note: RSS 2.0 feed built from the `post` collection (1 item).
+x-evidence:
+  fetched: '2026-08-04'
+  probed_hosts:
+  - daring.com
+  note: >-
+    api.daring.com, developer.daring.com and docs.daring.com do not resolve in DNS (no A record),
+    so there is no separate API or docs host to probe.

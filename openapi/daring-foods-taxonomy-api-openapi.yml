@@ -1,0 +1,506 @@
+openapi: 3.1.0
+info:
+  title: Daring Foods Taxonomy API
+  version: wp/v2
+  summary: Public read access to the cooking-method taxonomy that classifies the recipe library.
+  description: 'Public, unauthenticated read access to the term taxonomies on daring.com. The `category` taxonomy
+    is the functional one and is shared between the `post` and `recipes` types: on this site its 9 terms are cooking
+    methods, not editorial subjects - Saute (22 recipes), Oven Baked (13), Air Fry (7), Microwave (7), Pan Fry (5),
+    Grill Pan (5), Dutch Oven (1), Braise (1) and the WordPress default Uncategorized (4). Combined with the `categories`
+    filter on /wp/v2/recipes this is what makes the recipe library queryable by how the dish is cooked. The `post_tag`
+    taxonomy is registered but empty (0 terms), which the tags operations below report faithfully rather than omit.'
+  contact:
+    name: Daring Foods
+    url: https://daring.com/faq/
+  license:
+    name: Site content - all rights reserved; see Terms & Conditions
+    url: https://daring.com/terms-and-conditions/
+  x-apis-io-provenance:
+    method: derived
+    source: https://daring.com/wp-json/
+    derived_on: '2026-08-04'
+    note: Routes enumerated from the live WordPress route index at https://daring.com/wp-json/ (222 routes across
+      10 namespaces) on 2026-08-04, then probed anonymously one at a time; only routes verified to return HTTP 200
+      without credentials are documented here. Schemas reflect fields observed in the live responses. Write methods
+      exist on the same routes but require WordPress authentication (cookie + X-WP-Nonce, or Application Passwords)
+      and return HTTP 401 anonymously, so they are not documented. No fabricated operations, parameters or fields.
+servers:
+- url: https://daring.com/wp-json
+  description: Production
+tags:
+- name: Categories
+  description: The `category` taxonomy - cooking methods for the recipe library.
+- name: Tags
+  description: The `post_tag` taxonomy. Registered but empty on this site (0 terms).
+paths:
+  /wp/v2/categories:
+    get:
+      tags:
+      - Categories
+      operationId: listCategories
+      summary: List categories
+      description: Returns the `category` terms - the cooking-method classification for the recipe library. Verified
+        live at 9 terms.
+      parameters:
+      - &id001
+        $ref: '#/components/parameters/page'
+      - &id002
+        $ref: '#/components/parameters/perPage'
+      - &id003
+        $ref: '#/components/parameters/search'
+      - &id004
+        $ref: '#/components/parameters/order'
+      - &id005
+        $ref: '#/components/parameters/orderby'
+      - &id006
+        $ref: '#/components/parameters/context'
+      - &id007
+        $ref: '#/components/parameters/slugFilter'
+      - &id008
+        $ref: '#/components/parameters/include'
+      - &id009
+        $ref: '#/components/parameters/exclude'
+      - &id010
+        $ref: '#/components/parameters/offset'
+      - &id011
+        $ref: '#/components/parameters/fields'
+      - &id012
+        name: hide_empty
+        in: query
+        description: Whether to hide terms not assigned to any posts.
+        schema:
+          type: boolean
+          default: false
+      - &id013
+        name: post
+        in: query
+        description: Limit results to terms assigned to a specific post.
+        schema:
+          type: integer
+      - name: parent
+        in: query
+        description: Limit results to terms with the given parent term ID.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: A page of category terms.
+          headers:
+            X-WP-Total:
+              $ref: '#/components/headers/XWPTotal'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/XWPTotalPages'
+            Link:
+              $ref: '#/components/headers/LinkPagination'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+              example:
+              - id: 15
+                count: 7
+                description: ''
+                link: https://daring.com/category/air-fry/
+                name: Air Fry
+                slug: air-fry
+                taxonomy: category
+                parent: 0
+        '400':
+          description: Invalid request parameter (rest_invalid_param).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: rest_invalid_param
+                message: 'Invalid parameter(s): per_page'
+                data:
+                  status: 400
+                  params:
+                    per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+  /wp/v2/categories/{id}:
+    get:
+      tags:
+      - Categories
+      operationId: getCategory
+      summary: Retrieve a category
+      description: Returns a single `category` term by numeric ID.
+      parameters:
+      - $ref: '#/components/parameters/idPath'
+      - $ref: '#/components/parameters/context'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          description: The requested category term.
+          headers:
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+              example:
+                id: 15
+                count: 7
+                description: ''
+                link: https://daring.com/category/air-fry/
+                name: Air Fry
+                slug: air-fry
+                taxonomy: category
+                parent: 0
+        '404':
+          description: Object not found, or no route matches the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: rest_post_invalid_id
+                message: Invalid post ID.
+                data:
+                  status: 404
+  /wp/v2/tags:
+    get:
+      tags:
+      - Tags
+      operationId: listTags
+      summary: List tags
+      description: 'Returns the `post_tag` terms. Verified live at 0 terms - the endpoint is reachable and returns
+        an empty array with X-WP-Total: 0.'
+      parameters:
+      - *id001
+      - *id002
+      - *id003
+      - *id004
+      - *id005
+      - *id006
+      - *id007
+      - *id008
+      - *id009
+      - *id010
+      - *id011
+      - *id012
+      - *id013
+      responses:
+        '200':
+          description: A page of tag terms. Empty on this site.
+          headers:
+            X-WP-Total:
+              $ref: '#/components/headers/XWPTotal'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/XWPTotalPages'
+            Link:
+              $ref: '#/components/headers/LinkPagination'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+              example: []
+        '400':
+          description: Invalid request parameter (rest_invalid_param).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: rest_invalid_param
+                message: 'Invalid parameter(s): per_page'
+                data:
+                  status: 400
+                  params:
+                    per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+  /wp/v2/tags/{id}:
+    get:
+      tags:
+      - Tags
+      operationId: getTag
+      summary: Retrieve a tag
+      description: Returns a single `post_tag` term by numeric ID. No terms exist on this site, so every ID currently
+        returns HTTP 404.
+      parameters:
+      - $ref: '#/components/parameters/idPath'
+      - $ref: '#/components/parameters/context'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          description: The requested tag term.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        '404':
+          description: Object not found, or no route matches the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: rest_post_invalid_id
+                message: Invalid post ID.
+                data:
+                  status: 404
+components:
+  parameters:
+    page:
+      name: page
+      in: query
+      description: Current page of the collection (1-based).
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    perPage:
+      name: per_page
+      in: query
+      description: Maximum number of items returned per page. Verified server cap is 100; a larger value returns
+        HTTP 400 rest_invalid_param.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a free-text string.
+      schema:
+        type: string
+    order:
+      name: order
+      in: query
+      description: Sort direction.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: desc
+    orderby:
+      name: orderby
+      in: query
+      description: Field to sort the collection by.
+      schema:
+        type: string
+        enum:
+        - date
+        - id
+        - include
+        - modified
+        - relevance
+        - slug
+        - title
+        default: date
+    context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines the fields present in the response. Anonymous
+        callers may use `view` and `embed` only - `edit` returns HTTP 401.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        default: view
+    fields:
+      name: _fields
+      in: query
+      description: Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress
+        core response-shaping convention, verified working on this host.
+      schema:
+        type: string
+    embed:
+      name: _embed
+      in: query
+      description: Inline embeddable linked resources (featured media, terms, author) into an `_embedded` object.
+      schema:
+        type: boolean
+    slugFilter:
+      name: slug
+      in: query
+      description: Limit results to items with one of the given slugs.
+      schema:
+        type: array
+        items:
+          type: string
+    include:
+      name: include
+      in: query
+      description: Limit result set to specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
+    exclude:
+      name: exclude
+      in: query
+      description: Ensure result set excludes specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
+    offset:
+      name: offset
+      in: query
+      description: Offset the result set by a specific number of items.
+      schema:
+        type: integer
+        minimum: 0
+    idPath:
+      name: id
+      in: path
+      required: true
+      description: Unique numeric identifier for the object.
+      schema:
+        type: integer
+  headers:
+    XWPTotal:
+      description: Total number of items in the unpaginated collection.
+      schema:
+        type: integer
+    XWPTotalPages:
+      description: Total number of pages available at the requested per_page size.
+      schema:
+        type: integer
+    LinkPagination:
+      description: RFC 8288 Link header carrying `prev` and `next` relations for the collection.
+      schema:
+        type: string
+    CacheControl:
+      description: 'Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable:
+        SHORT).'
+      schema:
+        type: string
+  schemas:
+    Error:
+      type: object
+      description: 'The WordPress REST error envelope. NOTE: this is NOT RFC 9457 problem+json - the media type
+        is application/json and the shape is {code, message, data}.'
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable WordPress error code, e.g. rest_post_invalid_id, rest_invalid_param, rest_no_route.
+          examples:
+          - rest_post_invalid_id
+        message:
+          type: string
+          description: Human-readable error message.
+          examples:
+          - Invalid post ID.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code, repeated in the body.
+              examples:
+              - 404
+            params:
+              type: object
+              additionalProperties:
+                type: string
+              description: 'Present on rest_invalid_param: per-parameter validation messages.'
+            details:
+              type: object
+              description: 'Present on rest_invalid_param: per-parameter structured detail.'
+    Category:
+      type: object
+      description: A taxonomy term.
+      properties:
+        id:
+          type: integer
+        count:
+          type: integer
+          description: Number of published objects assigned to the term.
+        description:
+          type: string
+        link:
+          type: string
+          format: uri
+          description: Public archive URL for the term.
+        name:
+          type: string
+          examples:
+          - Air Fry
+        slug:
+          type: string
+          examples:
+          - air-fry
+        taxonomy:
+          type: string
+          examples:
+          - category
+        parent:
+          type: integer
+          description: Parent term ID; 0 for top-level. Only on hierarchical taxonomies.
+        meta:
+          type:
+          - array
+          - object
+        acf:
+          type:
+          - array
+          - object
+          description: Empty over REST on this host.
+        yoast_head:
+          type: string
+        yoast_head_json:
+          type: object
+        _links:
+          type: object
+    Tag:
+      type: object
+      description: A taxonomy term.
+      properties:
+        id:
+          type: integer
+        count:
+          type: integer
+          description: Number of published objects assigned to the term.
+        description:
+          type: string
+        link:
+          type: string
+          format: uri
+          description: Public archive URL for the term.
+        name:
+          type: string
+          examples:
+          - Air Fry
+        slug:
+          type: string
+          examples:
+          - air-fry
+        taxonomy:
+          type: string
+          examples:
+          - category
+        parent:
+          type: integer
+          description: Parent term ID; 0 for top-level. Only on hierarchical taxonomies.
+        meta:
+          type:
+          - array
+          - object
+        acf:
+          type:
+          - array
+          - object
+          description: Empty over REST on this host.
+        yoast_head:
+          type: string
+        yoast_head_json:
+          type: object
+        _links:
+          type: object

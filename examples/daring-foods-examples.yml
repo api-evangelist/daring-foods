@@ -1,0 +1,158 @@
+generated: '2026-08-04'
+method: probed
+source: >-
+  Every request below was executed against https://daring.com/wp-json/ on 2026-08-04 and the
+  status codes and response shapes are what came back. Response bodies are trimmed for length
+  (the yoast_head HTML blob and _links are elided) but not otherwise altered.
+base_url: https://daring.com/wp-json
+authentication: none
+examples:
+- name: Discover the whole surface
+  description: The entry point. Returns site identity, the 10 registered namespaces, the advertised authentication mechanism and all 222 routes.
+  request: GET /?_fields=name,url,namespaces,authentication
+  status: 200
+  response: |
+    {
+      "name": "Daring Foods Plant Chicken | Chicken Better. Chicken On.",
+      "url": "https://daring.com",
+      "namespaces": ["oembed/1.0","wpe/cache-plugin/v1","wpe_sign_on_plugin/v1","redirection/v1",
+                     "yoast/v1","genesisblocks/v1","wp/v2","wp-site-health/v1",
+                     "wp-block-editor/v1","wp-abilities/v1"],
+      "authentication": {"application-passwords":{"endpoints":{
+        "authorization":"https://daring.com/wp-admin/authorize-application.php"}}}
+    }
+- name: Find the custom content collections
+  description: How the three Daring-specific post types are discovered without prior knowledge.
+  request: GET /wp/v2/types
+  status: 200
+  response_note: >-
+    Returns 14 post types keyed by slug. The Daring-specific ones are `products`,
+    `foodservice-products` and `recipes`; each carries rest_base and rest_namespace, which give
+    the collection path.
+- name: List the retail product catalog
+  description: The full retail line in one call, trimmed to the useful fields.
+  request: GET /wp/v2/products?per_page=100&_fields=id,slug,title,link
+  status: 200
+  response_headers:
+    X-WP-Total: '14'
+    X-WP-TotalPages: '1'
+  response: |
+    [{"id":1557,"slug":"original-shredded-plant-chicken",
+      "title":{"rendered":"Original Shredded Plant Chicken"},
+      "link":"https://daring.com/products/original-shredded-plant-chicken/"}, ...]
+  note: 14 products - Original Shredded/Diced, six Plant Chicken Bowls, two Wings, Cajun/Teriyaki/Original Pieces.
+- name: Walk the recipe library
+  description: The largest collection on the host. Follow the Link rel="next" relation rather than incrementing page.
+  request: GET /wp/v2/recipes?per_page=100&_fields=id,slug,title,link,categories
+  status: 200
+  response_headers:
+    X-WP-Total: '208'
+    X-WP-TotalPages: '3'
+    Link: '<https://daring.com/wp-json/wp/v2/recipes?per_page=100&page=2>; rel="next"'
+- name: Get the cooking-method vocabulary
+  description: The category taxonomy on this site holds cooking methods, not subjects.
+  request: GET /wp/v2/categories?per_page=100&_fields=id,slug,name,count
+  status: 200
+  response: |
+    [{"id":15,"slug":"air-fry","name":"Air Fry","count":7},
+     {"id":16,"slug":"braise","name":"Braise","count":1},
+     {"id":7,"slug":"dutch-oven","name":"Dutch Oven","count":1},
+     {"id":5,"slug":"grill-pan","name":"Grill Pan","count":5},
+     {"id":17,"slug":"microwave","name":"Microwave","count":7},
+     {"id":4,"slug":"oven-baked","name":"Oven Baked","count":13},
+     {"id":6,"slug":"pan-fry","name":"Pan Fry","count":5},
+     {"id":3,"slug":"saute","name":"Sauté","count":22},
+     {"id":1,"slug":"uncategorized","name":"Uncategorized","count":4}]
+- name: Filter recipes by cooking method
+  description: The one classification edge in the model - combine the taxonomy term id with the categories filter.
+  request: GET /wp/v2/recipes?categories=15&per_page=100&_fields=id,title,link
+  status: 200
+  note: categories=15 is Air Fry (7 recipes).
+- name: Resolve a recipe's featured image in one round trip
+  description: _embed inlines the media record instead of requiring a second call per featured_media id.
+  request: GET /wp/v2/recipes/1647?_embed
+  status: 200
+  response_note: >-
+    Adds an `_embedded` object carrying the full wp:featuredmedia record (source_url, mime_type,
+    alt_text and every generated size variant) and wp:term with the assigned categories.
+- name: Retrieve a single recipe
+  request: GET /wp/v2/recipes/1647?_fields=id,slug,title,link,date,categories
+  status: 200
+  response: |
+    {"id":1647,"date":"2026-06-23T19:26:37","slug":"crispy-buffalo-plant-chicken-quesadillas",
+     "title":{"rendered":"Crispy Buffalo Plant Chicken Quesadillas"},
+     "link":"https://daring.com/recipes/crispy-buffalo-plant-chicken-quesadillas/",
+     "categories":[...]}
+- name: Cross-content keyword search
+  description: The cheapest way to find content by keyword. `subtype` tells you which collection to resolve the id against.
+  request: GET /wp/v2/search?search=buffalo&per_page=2&_fields=id,title,url,type,subtype
+  status: 200
+  response: |
+    [{"id":1647,"title":"Crispy Buffalo Plant Chicken Quesadillas",
+      "url":"https://daring.com/recipes/crispy-buffalo-plant-chicken-quesadillas/",
+      "type":"post","subtype":"recipes"},
+     {"id":1621,"title":"SUPER(bowl) ...","url":"...","type":"post","subtype":"recipes"}]
+- name: Search only products
+  request: GET /wp/v2/search?search=teriyaki&subtype=products&_fields=id,title,url,subtype
+  status: 200
+- name: Read a marketing page's full body
+  description: Pages are the only collection that returns rendered content - use this to harvest Daring's own ingredient and sourcing statements.
+  request: GET /wp/v2/pages/199?_fields=id,slug,title,content
+  status: 200
+  note: Page 199 is the Ingredients page. Page 447 is the FAQ, 14 is Our Mission, 16 is Terms & Conditions.
+- name: List the foodservice line
+  request: GET /wp/v2/foodservice-products?per_page=100&_fields=id,slug,title,link
+  status: 200
+  response_headers:
+    X-WP-Total: '7'
+- name: Get the schema.org JSON-LD for a recipe
+  description: The most structured description of a Daring recipe available from this host.
+  request: GET /yoast/v1/get_head?url=https%3A%2F%2Fdaring.com%2Frecipes%2Fcrispy-buffalo-plant-chicken-quesadillas%2F
+  status: 200
+  response_note: >-
+    Returns {json, html}. json.schema carries the full schema.org @graph (WebPage, Article,
+    Organization, ImageObject, BreadcrumbList) that Yoast generates for the URL.
+- name: Get an embeddable card for a recipe
+  request: GET /oembed/1.0/embed?url=https%3A%2F%2Fdaring.com%2Frecipes%2Fcrispy-buffalo-plant-chicken-quesadillas%2F
+  status: 200
+  response: |
+    {"version":"1.0",
+     "provider_name":"Daring Foods Plant Chicken | Chicken Better. Chicken On.",
+     "provider_url":"https://daring.com","author_name":"Joe Tao",
+     "title":"Crispy Buffalo Plant Chicken Quesadillas","type":"rich",
+     "width":600,"html":"<blockquote class=\"wp-embedded-content\">...","thumbnail_url":"..."}
+- name: Same call as XML
+  request: GET /oembed/1.0/embed?url=https%3A%2F%2Fdaring.com%2F&format=xml
+  status: 200
+  content_type: text/xml
+error_examples:
+- name: per_page above the cap
+  request: GET /wp/v2/recipes?per_page=999
+  status: 400
+  response: |
+    {"code":"rest_invalid_param","message":"Invalid parameter(s): per_page",
+     "data":{"status":400,"params":{"per_page":"per_page must be between 1 (inclusive) and 100 (inclusive)"},
+     "details":{"per_page":{"code":"rest_out_of_bounds","message":"per_page must be between 1 (inclusive) and 100 (inclusive)","data":null}}}}
+- name: Unknown id
+  request: GET /wp/v2/recipes/99999999
+  status: 404
+  response: '{"code":"rest_post_invalid_id","message":"Invalid post ID.","data":{"status":404}}'
+- name: Anonymous write
+  request: POST /wp/v2/recipes
+  status: 401
+  response: '{"code":"rest_cannot_create","message":"Sorry, you are not allowed to create posts as this user.","data":{"status":401}}'
+- name: Credential-gated route
+  request: GET /wp/v2/settings
+  status: 401
+  response: '{"code":"rest_forbidden","message":"Sorry, you are not allowed to do that.","data":{"status":401}}'
+- name: Abilities API is gated
+  request: GET /wp-abilities/v1/abilities
+  status: 401
+  response: '{"code":"rest_forbidden","message":"Sorry, you are not allowed to do that.","data":{"status":401}}'
+  note: The namespace is registered on this host but not open. Worth re-probing on a later pass.
+what_you_cannot_get:
+- Nutrition facts, ingredient lists, allergen data - held in ACF, not exposed over REST (`acf` is empty on every record).
+- Recipe ingredients, steps, prep and cook times - same reason. Only the recipe's identity and cooking-method category are machine-readable.
+- SKU, GTIN/UPC, price, pack size or retail availability for any product.
+- Any link from a recipe to the Daring product it uses.
+- Store locations - the locator is a third-party embed outside this API.

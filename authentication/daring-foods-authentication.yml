@@ -1,0 +1,63 @@
+generated: '2026-08-04'
+method: probed
+source: https://daring.com/wp-json/
+docs: https://daring.com/wp-json/
+summary:
+  types: []
+  api_key_in: []
+  oauth2_flows: []
+  public_read: true
+  credential_required_for_reads: false
+posture: >-
+  Every operation captured in openapi/ is anonymously readable - no API key, no token, no signup,
+  no rate-limit credential. That is not a design decision by Daring Foods; it is the WordPress core
+  default for public content, and it is why the derived OpenAPI documents declare no
+  securitySchemes (both derive-authentication.py and derive-oauth-scopes.py returned zero schemes
+  for this provider, which is the correct result rather than a gap).
+schemes: []
+write_side:
+  advertised: true
+  mechanism: WordPress Application Passwords
+  source: >-
+    The `authentication` block of the live route index at https://daring.com/wp-json/, which
+    returns:
+    {"application-passwords":{"endpoints":{"authorization":"https://daring.com/wp-admin/authorize-application.php"}}}
+  authorization_endpoint: https://daring.com/wp-admin/authorize-application.php
+  note: >-
+    Application Passwords is the credential mechanism WordPress advertises for programmatic writes.
+    It is not obtainable by the public - it is issued from an authenticated wp-admin session on the
+    site - so it is recorded here as the documented write path, not as an onboarding route. Browser
+    sessions additionally use a cookie plus an X-WP-Nonce header, echoed in the
+    Access-Control-Allow-Headers response header observed on this host
+    (Authorization, X-WP-Nonce, Content-Disposition, Content-MD5, Content-Type).
+verified_behavior:
+- probe: GET /wp/v2/recipes?per_page=1
+  result: 200
+  note: Anonymous read succeeds.
+- probe: POST /wp/v2/recipes (no credentials)
+  result: 401
+  body: '{"code":"rest_cannot_create","message":"Sorry, you are not allowed to create posts as this user.","data":{"status":401}}'
+  note: Every write route rejects anonymous callers with HTTP 401 and the WordPress error envelope.
+- probe: GET /wp/v2/settings
+  result: 401
+  note: Site settings require authentication and are deliberately excluded from the captured OpenAPI.
+- probe: GET /wp/v2/themes, /wp/v2/plugins, /wp/v2/block-types, /wp/v2/templates
+  result: 401
+  note: Administrative surfaces are credential-gated; not documented.
+- probe: GET /wp-abilities/v1/abilities
+  result: 401
+  body: '{"code":"rest_forbidden","message":"Sorry, you are not allowed to do that.","data":{"status":401}}'
+  note: >-
+    The WordPress Abilities API namespace is registered on this host but gated. Worth re-probing on
+    a later pass - it is the surface that would expose agent-callable abilities if the provider ever
+    opened it.
+- probe: 'GET /wp/v2/recipes?context=edit'
+  result: 401
+  note: Only the `view` and `embed` contexts are available anonymously.
+transport:
+  https_only: true
+  tls_version: TLSv1.3
+  hsts: false
+  note: >-
+    No HSTS header is served. See security/daring-foods-domain-security.yml for the full transport
+    and DNS posture.

@@ -1,0 +1,94 @@
+# Daring Foods
+
+> Daring Foods (trading as "Daring") is an American plant-based food company founded in 2018 by Ross Mackay and Eliott Kessas, making 100% plant-based chicken from a short ingredient list with soy as the protein base. It sells retail Plant Chicken in shredded, diced and breaded-pieces formats plus Plant Chicken Bowls and Wings through 15,000+ US grocery stores, and runs a separate foodservice business for restaurants and institutional kitchens. It was acquired by the Australian plant-based meat manufacturer v2food in 2025. Daring Foods operates NO developer program and publishes no API. The machine-readable surface described below is the WordPress REST content API behind daring.com, which is anonymously readable; the OpenAPI documents were derived by API Evangelist from the live route index, not published by the provider.
+
+GENERATED: 2026-08-04 by API Evangelist (https://apievangelist.com). NOT served by daring.com — https://daring.com/llms.txt returns 404.
+
+## What you can actually get
+
+- 208 recipes, classified by cooking method (Sauté, Oven Baked, Air Fry, Microwave, Pan Fry, Grill Pan, Dutch Oven, Braise)
+- 14 retail products and 7 foodservice products (identity, permalink, featured image — no nutrition or ingredients)
+- 17 marketing pages with full rendered body content (Our Mission, Ingredients, How To Cook, FAQ, Terms)
+- 749 media items with every generated size variant
+- schema.org JSON-LD for any URL, and oEmbed 1.0 cards
+- Cross-content keyword search in a single call
+
+## What you cannot get
+
+Nutrition facts, ingredient lists, allergens, recipe steps, prep/cook times, SKU/GTIN/UPC, price, pack size and retail availability are all stored in Advanced Custom Fields and are NOT exposed over REST — the `acf` member is present but empty on every record. There is also no machine-readable link from a recipe to the product it uses. That information exists only on the rendered page at each record's `link`.
+
+## APIs
+
+Base URL for all of the below: https://daring.com/wp-json — no authentication, no signup, no API key.
+
+- [Recipes API](https://daring.com/recipes/): 208 recipes via the custom `recipes` post type. GET /wp/v2/recipes, GET /wp/v2/recipes/{id}. Filter by cooking method with `?categories={term_id}`.
+- [Retail Products API](https://daring.com/products/): 14 products via the custom `products` post type. GET /wp/v2/products, GET /wp/v2/products/{id}.
+- [Foodservice Products API](https://daring.com/foodservice/products/): 7 B2B products. GET /wp/v2/foodservice-products, GET /wp/v2/foodservice-products/{id}.
+- [Pages API](https://daring.com/): 17 marketing pages WITH full rendered content. GET /wp/v2/pages, GET /wp/v2/pages/{id}.
+- [Media API](https://daring.com/): 749 attachments. GET /wp/v2/media, GET /wp/v2/media/{id}. Use this to resolve a `featured_media` id, or append `_embed` to the content call instead.
+- [Taxonomy API](https://daring.com/recipes/): the 9-term cooking-method vocabulary. GET /wp/v2/categories.
+- [Search API](https://daring.com/): cross-content keyword search. GET /wp/v2/search?search={q}. `subtype` tells you which collection to resolve each hit against.
+- [Discovery API](https://daring.com/wp-json/): route index, post types, taxonomies, statuses, authors. GET /, GET /wp/v2/types.
+- [oEmbed API](https://daring.com/): GET /oembed/1.0/embed?url={encoded}. JSON and XML.
+- [SEO Metadata API](https://daring.com/): GET /yoast/v1/get_head?url={encoded} — schema.org JSON-LD graph for any URL.
+- [Posts API](https://daring.com/feed/): the WordPress default `post` collection. One post, 41 mostly-spam comments. Backs the RSS feed.
+
+## Specs
+
+- [Recipes OpenAPI](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/openapi/daring-foods-recipes-api-openapi.yml)
+- [Retail Products OpenAPI](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/openapi/daring-foods-products-api-openapi.yml)
+- [Foodservice OpenAPI](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/openapi/daring-foods-foodservice-api-openapi.yml)
+- [Pages OpenAPI](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/openapi/daring-foods-pages-api-openapi.yml)
+- [Media OpenAPI](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/openapi/daring-foods-media-api-openapi.yml)
+- [Taxonomy OpenAPI](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/openapi/daring-foods-taxonomy-api-openapi.yml)
+- [Search OpenAPI](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/openapi/daring-foods-search-api-openapi.yml)
+- [Discovery OpenAPI](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/openapi/daring-foods-discovery-api-openapi.yml)
+- [oEmbed OpenAPI](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/openapi/daring-foods-oembed-api-openapi.yml)
+- [SEO OpenAPI](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/openapi/daring-foods-seo-api-openapi.yml)
+- [Posts OpenAPI](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/openapi/daring-foods-posts-api-openapi.yml)
+- [apis.json](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/apis.yml)
+
+## Conventions
+
+- Pagination: `page` + `per_page` (max 100, hard-enforced). Read `X-WP-Total`, `X-WP-TotalPages` and follow the RFC 8288 `Link` rel="next".
+- Response shaping: `_fields=id,slug,title,link` trims records dramatically; `_embed` inlines featured media and terms.
+- Errors: the WordPress `{code, message, data.status}` envelope — NOT RFC 9457 problem+json.
+- Caching: `Cache-Control: max-age=600` behind a WP Engine/Cloudflare edge. Do not poll faster.
+- Rate limits: none published. robots.txt asks for `Crawl-delay: 10` — treat it as the ceiling.
+- Writes: every write route returns HTTP 401 anonymously. WordPress Application Passwords is the advertised mechanism and is not publicly obtainable.
+
+## Artifacts
+
+- [Authentication](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/authentication/daring-foods-authentication.yml)
+- [Conventions](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/conventions/daring-foods-conventions.yml)
+- [Error catalog](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/errors/daring-foods-problem-types.yml)
+- [Data model](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/data-model/daring-foods-data-model.yml)
+- [Examples](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/examples/daring-foods-examples.yml)
+- [Lifecycle](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/lifecycle/daring-foods-lifecycle.yml)
+- [Conformance](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/conformance/daring-foods-conformance.yml)
+- [Candidate MCP tools](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/mcp/daring-foods-mcp.yml)
+- [Tool crosswalk](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/mcp/daring-foods-tool-crosswalk.yml)
+- [Agent skills](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/skills/_index.yml)
+- [Well-known probe results](https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/well-known/daring-foods-well-known.yml)
+
+## Company
+
+- [Website](https://daring.com/)
+- [Our Mission](https://daring.com/our-mission/)
+- [Ingredients](https://daring.com/ingredients/)
+- [Products](https://daring.com/products/)
+- [Recipes](https://daring.com/recipes/)
+- [Foodservice](https://daring.com/foodservice/)
+- [Store Locator](https://daring.com/locator/)
+- [FAQ / Support](https://daring.com/faq/)
+- [Careers](https://daring.com/careers/)
+- [Terms & Conditions](https://daring.com/terms-and-conditions/)
+- [Privacy Policy](https://privacy.daring.com/privacy-policy)
+- [Accessibility Statement](https://daring.com/accessibility-statement/)
+
+## Not available
+
+- No developer portal, documentation, API reference, getting-started guide, changelog, status page, roadmap, pricing or sign-up for the API — none of these exist.
+- No SDKs, CLI, Postman collection or embeddable components.
+- No hosted MCP server, no A2A agent card, no GraphQL, no gRPC, no webhooks, no events and no AsyncAPI.
+- No security.txt, no vulnerability-disclosure program, no trust center and no published compliance certifications.

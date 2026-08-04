@@ -1,0 +1,389 @@
+openapi: 3.1.0
+info:
+  title: Daring Foods Foodservice Products API
+  version: wp/v2
+  summary: Public read access to the Daring foodservice (B2B) product line.
+  description: Public, unauthenticated read access to the Daring foodservice catalog at https://daring.com/foodservice/products/
+    via the site's custom `foodservice-products` post type on the WordPress REST API. This is the bulk/B2B line
+    sold to restaurants, campus dining and institutional kitchens - distinct from the retail `products` collection
+    - and held 7 published items at time of capture (observed in the X-WP-Total header), including the Unbreaded
+    Gluten-Free Diced Plant Chicken. As with the other custom post types on this host, the Advanced Custom Fields
+    payload is empty over REST, so case specifications, yields and distributor data are not retrievable through
+    the API.
+  contact:
+    name: Daring Foods
+    url: https://daring.com/faq/
+  license:
+    name: Site content - all rights reserved; see Terms & Conditions
+    url: https://daring.com/terms-and-conditions/
+  x-apis-io-provenance:
+    method: derived
+    source: https://daring.com/wp-json/
+    derived_on: '2026-08-04'
+    note: Routes enumerated from the live WordPress route index at https://daring.com/wp-json/ (222 routes across
+      10 namespaces) on 2026-08-04, then probed anonymously one at a time; only routes verified to return HTTP 200
+      without credentials are documented here. Schemas reflect fields observed in the live responses. Write methods
+      exist on the same routes but require WordPress authentication (cookie + X-WP-Nonce, or Application Passwords)
+      and return HTTP 401 anonymously, so they are not documented. No fabricated operations, parameters or fields.
+servers:
+- url: https://daring.com/wp-json
+  description: Production
+tags:
+- name: Foodservice
+  description: Daring bulk / B2B plant-chicken products for restaurants and institutional kitchens.
+paths:
+  /wp/v2/foodservice-products:
+    get:
+      tags:
+      - Foodservice
+      operationId: listFoodserviceProducts
+      summary: List foodservice products
+      description: Returns a paginated collection of published foodservice products. Verified live at 7 items.
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      - $ref: '#/components/parameters/search'
+      - $ref: '#/components/parameters/order'
+      - $ref: '#/components/parameters/orderby'
+      - $ref: '#/components/parameters/context'
+      - $ref: '#/components/parameters/slugFilter'
+      - $ref: '#/components/parameters/include'
+      - $ref: '#/components/parameters/exclude'
+      - $ref: '#/components/parameters/offset'
+      - $ref: '#/components/parameters/fields'
+      - $ref: '#/components/parameters/embed'
+      responses:
+        '200':
+          description: A page of foodservice products.
+          headers:
+            X-WP-Total:
+              $ref: '#/components/headers/XWPTotal'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/XWPTotalPages'
+            Link:
+              $ref: '#/components/headers/LinkPagination'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FoodserviceProduct'
+              example:
+              - id: 1075
+                date: '2023-07-13T04:33:31'
+                modified: '2026-06-23T16:40:05'
+                slug: unbreaded-gluten-free-diced-plant-chicken
+                status: publish
+                type: foodservice-products
+                link: https://daring.com/foodservice-products/unbreaded-gluten-free-diced-plant-chicken/
+                title:
+                  rendered: Unbreaded Gluten-Free Diced Plant Chicken
+                featured_media: 1077
+        '400':
+          description: Invalid request parameter (rest_invalid_param).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: rest_invalid_param
+                message: 'Invalid parameter(s): per_page'
+                data:
+                  status: 400
+                  params:
+                    per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+  /wp/v2/foodservice-products/{id}:
+    get:
+      tags:
+      - Foodservice
+      operationId: getFoodserviceProduct
+      summary: Retrieve a foodservice product
+      description: Returns a single published foodservice product by numeric ID.
+      parameters:
+      - $ref: '#/components/parameters/idPath'
+      - $ref: '#/components/parameters/context'
+      - $ref: '#/components/parameters/fields'
+      - $ref: '#/components/parameters/embed'
+      responses:
+        '200':
+          description: The requested foodservice product.
+          headers:
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoodserviceProduct'
+              example:
+                id: 1075
+                date: '2023-07-13T04:33:31'
+                modified: '2026-06-23T16:40:05'
+                slug: unbreaded-gluten-free-diced-plant-chicken
+                status: publish
+                type: foodservice-products
+                link: https://daring.com/foodservice-products/unbreaded-gluten-free-diced-plant-chicken/
+                title:
+                  rendered: Unbreaded Gluten-Free Diced Plant Chicken
+                featured_media: 1077
+        '404':
+          description: Object not found, or no route matches the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: rest_post_invalid_id
+                message: Invalid post ID.
+                data:
+                  status: 404
+components:
+  parameters:
+    page:
+      name: page
+      in: query
+      description: Current page of the collection (1-based).
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    perPage:
+      name: per_page
+      in: query
+      description: Maximum number of items returned per page. Verified server cap is 100; a larger value returns
+        HTTP 400 rest_invalid_param.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a free-text string.
+      schema:
+        type: string
+    order:
+      name: order
+      in: query
+      description: Sort direction.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: desc
+    orderby:
+      name: orderby
+      in: query
+      description: Field to sort the collection by.
+      schema:
+        type: string
+        enum:
+        - date
+        - id
+        - include
+        - modified
+        - relevance
+        - slug
+        - title
+        default: date
+    context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines the fields present in the response. Anonymous
+        callers may use `view` and `embed` only - `edit` returns HTTP 401.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        default: view
+    fields:
+      name: _fields
+      in: query
+      description: Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress
+        core response-shaping convention, verified working on this host.
+      schema:
+        type: string
+    embed:
+      name: _embed
+      in: query
+      description: Inline embeddable linked resources (featured media, terms, author) into an `_embedded` object.
+      schema:
+        type: boolean
+    slugFilter:
+      name: slug
+      in: query
+      description: Limit results to items with one of the given slugs.
+      schema:
+        type: array
+        items:
+          type: string
+    include:
+      name: include
+      in: query
+      description: Limit result set to specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
+    exclude:
+      name: exclude
+      in: query
+      description: Ensure result set excludes specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
+    offset:
+      name: offset
+      in: query
+      description: Offset the result set by a specific number of items.
+      schema:
+        type: integer
+        minimum: 0
+    idPath:
+      name: id
+      in: path
+      required: true
+      description: Unique numeric identifier for the object.
+      schema:
+        type: integer
+  headers:
+    XWPTotal:
+      description: Total number of items in the unpaginated collection.
+      schema:
+        type: integer
+    XWPTotalPages:
+      description: Total number of pages available at the requested per_page size.
+      schema:
+        type: integer
+    LinkPagination:
+      description: RFC 8288 Link header carrying `prev` and `next` relations for the collection.
+      schema:
+        type: string
+    CacheControl:
+      description: 'Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable:
+        SHORT).'
+      schema:
+        type: string
+  schemas:
+    Error:
+      type: object
+      description: 'The WordPress REST error envelope. NOTE: this is NOT RFC 9457 problem+json - the media type
+        is application/json and the shape is {code, message, data}.'
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable WordPress error code, e.g. rest_post_invalid_id, rest_invalid_param, rest_no_route.
+          examples:
+          - rest_post_invalid_id
+        message:
+          type: string
+          description: Human-readable error message.
+          examples:
+          - Invalid post ID.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code, repeated in the body.
+              examples:
+              - 404
+            params:
+              type: object
+              additionalProperties:
+                type: string
+              description: 'Present on rest_invalid_param: per-parameter validation messages.'
+            details:
+              type: object
+              description: 'Present on rest_invalid_param: per-parameter structured detail.'
+    FoodserviceProduct:
+      type: object
+      description: A Daring foodservice product entry (custom post type `foodservice-products`).
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the item.
+        date:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Publication date in the site's timezone.
+        date_gmt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Publication date as GMT.
+        modified:
+          type: string
+          format: date-time
+          description: Last modification date in the site's timezone.
+        modified_gmt:
+          type: string
+          format: date-time
+          description: Last modification date as GMT.
+        guid:
+          type: object
+          properties:
+            rendered:
+              type: string
+          description: Globally unique identifier for the item.
+        slug:
+          type: string
+          description: Alphanumeric identifier unique to its post type.
+        status:
+          type: string
+          description: Publication status; only `publish` is visible anonymously.
+          examples:
+          - publish
+        type:
+          type: string
+          description: WordPress post type of the item.
+        link:
+          type: string
+          format: uri
+          description: Public URL of the item on daring.com.
+        title:
+          type: object
+          properties:
+            rendered:
+              type: string
+          description: 'Item title. NOTE: HTML entities are escaped in the rendered value (e.g. `Buffalo Mac &#038;
+            Cheese`).'
+        featured_media:
+          type: integer
+          description: Media library ID of the featured image; 0 when unset. Resolve via /wp/v2/media/{id} or `_embed`.
+        template:
+          type: string
+          description: Theme file used to display the item.
+        class_list:
+          type: array
+          items:
+            type: string
+          description: CSS class names WordPress generates for the item.
+        acf:
+          description: Advanced Custom Fields payload. Observed EMPTY (`[]`) on this host - the site runs ACF but
+            does not expose field values over REST, so nutrition, ingredient and recipe-step data are NOT available
+            through this API.
+          type:
+          - array
+          - object
+        yoast_head:
+          type: string
+          description: Yoast SEO rendered <head> markup for the item.
+        yoast_head_json:
+          type: object
+          description: Yoast SEO head metadata as structured JSON, including the schema.org JSON-LD graph.
+        _links:
+          type: object
+          description: HAL-style link relations (self, collection, about, wp:featuredmedia, curies).

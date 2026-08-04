@@ -1,0 +1,141 @@
+generated: '2026-08-04'
+method: probed
+source: >-
+  Live request/response observation against https://daring.com/wp-json/ on 2026-08-04, plus the
+  derived OpenAPI documents in openapi/. Daring Foods publishes no API documentation, so nothing
+  here is quoted from the provider - every convention below was measured.
+authentication:
+  style: none-for-reads
+  detail: >-
+    No credential of any kind is required for any documented operation. Writes require WordPress
+    Application Passwords and are outside the public surface.
+  see: authentication/daring-foods-authentication.yml
+idempotency:
+  supported: false
+  header: null
+  detail: >-
+    There is no idempotency-key contract. WordPress core does not implement one, and the entire
+    public surface is GET-only, so the question is moot for read traffic and unanswered for the
+    credential-gated write side. No Idempotency pointer is emitted for this provider because none
+    is genuinely supported.
+pagination:
+  style: page-number
+  request:
+    page:
+      description: 1-based page number.
+      default: 1
+    per_page:
+      description: Items per page.
+      default: 10
+      max: 100
+      enforcement: >-
+        Hard-enforced server-side. per_page=101 returns HTTP 400 rest_invalid_param with
+        details.per_page.code = rest_out_of_bounds. Verified live.
+    offset:
+      description: Alternative to page; skips a fixed number of items.
+  response_signals:
+    X-WP-Total: Total items in the unpaginated collection. Verified live (recipes 208, media 749, pages 17, products 14, foodservice-products 7, comments 41, categories 9, tags 0).
+    X-WP-TotalPages: Total pages at the requested per_page.
+    Link: >-
+      RFC 8288 Link header carrying rel="prev" and rel="next" absolute URLs. Verified live on
+      /wp/v2/recipes?per_page=2&page=2.
+  cors_note: >-
+    Access-Control-Expose-Headers is set to "X-WP-Total, X-WP-TotalPages, Link", so a browser
+    client can read all three cross-origin.
+  guidance: >-
+    Walk collections with per_page=100 and follow the Link rel="next" relation rather than
+    incrementing page blindly. The full recipe library is 3 pages at per_page=100.
+field_selection:
+  sparse_fields:
+    param: _fields
+    format: Comma-separated field paths, e.g. _fields=id,slug,title,link
+    verified: true
+    note: >-
+      The single most valuable convention on this host. Full recipe/product records carry a large
+      `yoast_head` HTML blob and a `yoast_head_json` schema.org graph; _fields cuts a record from
+      several kilobytes to a few hundred bytes.
+  expansion:
+    param: _embed
+    format: Boolean. Inlines linked resources into an `_embedded` object.
+    verified: true
+    note: >-
+      Resolves wp:featuredmedia (the featured image record), wp:term (assigned categories) and
+      author in the same round trip - the alternative to a follow-up call per featured_media ID.
+  envelope:
+    param: _envelope
+    note: WordPress core convention that wraps body, status and headers into a single JSON object. Not separately verified on this host.
+filtering:
+  common:
+  - search - free-text match
+  - include / exclude - by ID
+  - slug - by slug
+  - order / orderby - sort control (date, id, include, modified, relevance, slug, title)
+  - after / before - ISO 8601 publication-date windows
+  collection_specific:
+    recipes: categories, categories_exclude (cooking-method term IDs)
+    posts: categories, tags
+    pages: parent, menu_order
+    media: media_type, mime_type, parent
+    comments: post, parent
+    search: type, subtype
+metadata:
+  supported: false
+  detail: >-
+    The `meta` and `acf` members are present on every record but are EMPTY on this host. Advanced
+    Custom Fields is installed and drives the site's product and recipe detail pages, but the
+    fields are not registered with show_in_rest, so nutrition panels, ingredient lists, recipe
+    steps, cook times and retail availability are NOT retrievable through this API. This is the
+    single biggest gap in the surface - the data exists on the rendered page at each record's
+    `link` and nowhere in the JSON.
+request_tracing:
+  request_id_header: null
+  detail: >-
+    No request-id or correlation header is returned. Responses carry Cloudflare's `cf-ray` and WP
+    Engine's `x-cache` / `x-cache-group` headers, which identify the edge hit rather than the
+    request, and are not a support-grade trace ID - there is no support channel to quote one to.
+versioning:
+  scheme: uri-path-namespace
+  current: wp/v2
+  detail: >-
+    Versioning is WordPress core's own namespace scheme, not a Daring Foods product decision. The
+    namespace advances with WordPress releases, on WordPress's schedule, with no notice to
+    consumers of this site. Plugin namespaces on this host (yoast/v1, oembed/1.0,
+    redirection/v1, genesisblocks/v1, wpe/cache-plugin/v1, wp-abilities/v1) version independently
+    and can appear or disappear whenever a plugin is installed, updated or removed.
+  see: lifecycle/daring-foods-lifecycle.yml
+error_envelope:
+  shape: '{code, message, data:{status, params?, details?}}'
+  rfc9457: false
+  see: errors/daring-foods-problem-types.yml
+rate_limiting:
+  published_limits: false
+  headers: []
+  detail: >-
+    No RateLimit headers (RFC 9331 or X-RateLimit-*) are returned, and no limits are published.
+    The only rate guidance the provider publishes anywhere is `Crawl-delay: 10` in robots.txt,
+    which is a crawler directive rather than an API limit - treat it as the ceiling anyway.
+    Cloudflare sits in front of the origin and may throttle or challenge aggressive callers with
+    no advance signal.
+caching:
+  cache_control: max-age=600, must-revalidate
+  edge: 'WP Engine (x-cacheable: SHORT, x-cache-group: normal) behind Cloudflare (cf-cache-status)'
+  pragma: no-cache
+  guidance: >-
+    Responses are edge-cached for 10 minutes. Polling faster than that returns identical bytes;
+    conditional requests and a 10-minute floor are the correct client behavior. Content on this
+    site changes on the order of weeks - the newest recipe at capture was 2026-06-23.
+content_negotiation:
+  formats:
+  - application/json (all wp/v2 and yoast/v1 routes)
+  - text/xml (oembed/1.0/embed with format=xml)
+  batch:
+    route: /batch/v1
+    method: POST
+    note: WordPress core batch endpoint is registered but POST-only and therefore credential-gated; not part of the public read surface.
+cross_links:
+  errors: errors/daring-foods-problem-types.yml
+  lifecycle: lifecycle/daring-foods-lifecycle.yml
+  authentication: authentication/daring-foods-authentication.yml
+  conformance: conformance/daring-foods-conformance.yml
+  data_model: data-model/daring-foods-data-model.yml
+  examples: examples/daring-foods-examples.yml

@@ -1,0 +1,141 @@
+generated: '2026-08-04'
+method: derived
+source:
+- mcp/daring-foods-mcp.yml
+- openapi/daring-foods-*-openapi.yml
+summary: >-
+  Binds each candidate MCP tool to the OpenAPI operation that backs it, so every tool inherits a
+  REAL input schema (that operation's parameters) rather than a guessed one. Confidence is `high`
+  on every row for an unusual reason: there is no published MCP server and no GraphQL surface for
+  this provider, so the tool set was derived FROM the operations rather than matched against a
+  live tools/list. There is therefore nothing to mis-map - but equally, nothing here is evidence
+  that Daring Foods serves an agent surface. It does not.
+surfaces:
+  openapi:
+    present: true
+    files: 11
+    operations: 31
+    gated: false
+    note: Derived by API Evangelist from the live route index; not published by the provider.
+  graphql:
+    present: false
+    endpoint: null
+    note: No /graphql surface on this host. WPGraphQL is not installed - the namespace list contains no graphql entry.
+  mcp:
+    present: false
+    url: null
+    gated: null
+    note: No hosted MCP server exists. tools/list could not be called because there is no endpoint to call it against.
+  a2a:
+    present: false
+    note: Both /.well-known/agent-card.json and /.well-known/agent.json return 404.
+crosswalk:
+- tool: search_daring_content
+  category: discovery
+  rest: [searchSiteContent]
+  binding: rest
+  confidence: high
+- tool: list_recipes
+  category: recipes
+  rest: [listRecipes]
+  binding: rest
+  confidence: high
+  note: Inherits page, per_page, search, order, orderby, categories, categories_exclude, after, before, slug, include, exclude, offset, _fields, _embed.
+- tool: get_recipe
+  category: recipes
+  rest: [getRecipe]
+  binding: rest
+  confidence: high
+- tool: list_cooking_methods
+  category: taxonomy
+  rest: [listCategories]
+  binding: rest
+  confidence: high
+  note: >-
+    Named for what the taxonomy actually holds on this site rather than for the WordPress term.
+    The backing operation is the generic categories collection.
+- tool: list_products
+  category: catalog
+  rest: [listProducts]
+  binding: rest
+  confidence: high
+- tool: get_product
+  category: catalog
+  rest: [getProduct]
+  binding: rest
+  confidence: high
+- tool: list_foodservice_products
+  category: catalog
+  rest: [listFoodserviceProducts]
+  binding: rest
+  confidence: high
+- tool: get_foodservice_product
+  category: catalog
+  rest: [getFoodserviceProduct]
+  binding: rest
+  confidence: high
+- tool: list_pages
+  category: content
+  rest: [listPages]
+  binding: rest
+  confidence: high
+- tool: get_page
+  category: content
+  rest: [getPage]
+  binding: rest
+  confidence: high
+- tool: get_media
+  category: media
+  rest: [getMediaItem]
+  binding: rest
+  confidence: high
+- tool: get_page_seo_metadata
+  category: metadata
+  rest: [getSeoHead]
+  binding: rest
+  confidence: high
+- tool: get_embed_card
+  category: metadata
+  rest: [getOEmbed]
+  binding: rest
+  confidence: high
+mcp_only: []
+rest_only:
+- capability: Bulk media enumeration
+  operations: [listMedia]
+  reason: >-
+    749 attachments with no useful filter for an agent; get_media by id (resolving a
+    featured_media reference) is the tool-shaped access pattern, so the list operation is left
+    unbound.
+- capability: Posts and comments
+  operations: [listPosts, getPost, listComments, getComment]
+  reason: >-
+    One post (the WordPress install default) and 41 predominantly spam comments. Real operations,
+    no agent value - deliberately not exposed as tools.
+- capability: Tag taxonomy
+  operations: [listTags, getTag]
+  reason: The post_tag taxonomy is empty (0 terms) on this site.
+- capability: Route and type introspection
+  operations: [getRouteIndex, getWpV2Namespace, listPostTypes, getPostType, listTaxonomies, getTaxonomy, listStatuses, getStatus]
+  reason: >-
+    Discovery metadata a server consumes at build time to know what collections exist; not
+    something an agent should call at inference time.
+- capability: Authors
+  operations: [listUsers, getUser]
+  reason: Three CMS accounts, no agent value; also the collection most likely to be locked down later.
+- capability: Category single-read
+  operations: [getCategory]
+  reason: The full 9-term vocabulary fits in one list_cooking_methods call; a per-term read is redundant.
+coverage:
+  tools_named: 13
+  tools_bound: 13
+  mcp_only: 0
+  graphql_only: 0
+  rest_operations_total: 31
+  rest_operations_with_tool: 13
+  rest_operations_unbound: 18
+divergence_note: >-
+  Zero divergence between surfaces, because only one surface exists. The value of this crosswalk
+  for Daring Foods is the rest_only[] column: it records which 18 of the 31 real operations are
+  deliberately NOT agent-facing and why, so a later pass does not mistake their absence for an
+  oversight.

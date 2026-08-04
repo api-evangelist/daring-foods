@@ -1,0 +1,118 @@
+generated: '2026-08-04'
+method: probed
+source: live error responses from https://daring.com/wp-json/ plus openapi/ 4xx responses
+format: wordpress-rest-error
+rfc9457: false
+envelope:
+  media_type: application/json
+  shape: '{code, message, data}'
+  fields:
+    code: Machine-readable WordPress error code. This is the field to branch on - the HTTP status alone is not specific enough.
+    message: Human-readable, English-only message. Not stable across WordPress versions; do not parse.
+    data.status: The HTTP status code, repeated in the body.
+    data.params: Present only on rest_invalid_param - a map of parameter name to validation message.
+    data.details: Present only on rest_invalid_param - per-parameter structured detail with its own nested code.
+  note: >-
+    This is NOT RFC 9457 problem+json. There is no `type` URI, no `title`, no `instance`, and the
+    media type is plain application/json. Any agent written against RFC 9457 must special-case this
+    envelope. The site publishes no error reference of its own - Daring Foods runs no developer
+    program - so every entry below was observed live against the running API on 2026-08-04 or read
+    off the WordPress core controllers backing the captured operations.
+problems:
+- status: 400
+  code: rest_invalid_param
+  title: Invalid request parameter
+  detail: One or more query parameters failed validation.
+  observed: true
+  example_request: GET /wp/v2/recipes?per_page=999
+  example_body: '{"code":"rest_invalid_param","message":"Invalid parameter(s): per_page","data":{"status":400,"params":{"per_page":"per_page must be between 1 (inclusive) and 100 (inclusive)"},"details":{"per_page":{"code":"rest_out_of_bounds","message":"per_page must be between 1 (inclusive) and 100 (inclusive)","data":null}}}}'
+  remediation: >-
+    Read data.params to find which parameter failed and why. The most common cause on this host is
+    per_page above the hard cap of 100.
+  source_operations:
+  - openapi/daring-foods-recipes-api-openapi.yml#listRecipes
+  - openapi/daring-foods-products-api-openapi.yml#listProducts
+  - openapi/daring-foods-foodservice-api-openapi.yml#listFoodserviceProducts
+  - openapi/daring-foods-pages-api-openapi.yml#listPages
+  - openapi/daring-foods-media-api-openapi.yml#listMedia
+  - openapi/daring-foods-search-api-openapi.yml#searchSiteContent
+- status: 400
+  code: rest_out_of_bounds
+  title: Parameter out of bounds
+  detail: >-
+    Nested inside data.details of a rest_invalid_param response when a numeric parameter is outside
+    its permitted range.
+  observed: true
+  remediation: Clamp per_page to 1-100 and page to >= 1.
+- status: 401
+  code: rest_cannot_create
+  title: Not allowed to create
+  detail: An anonymous caller attempted a write operation.
+  observed: true
+  example_request: POST /wp/v2/recipes
+  example_body: '{"code":"rest_cannot_create","message":"Sorry, you are not allowed to create posts as this user.","data":{"status":401}}'
+  remediation: >-
+    Writes require WordPress Application Passwords or a cookie plus X-WP-Nonce. No public
+    credential path exists. See authentication/daring-foods-authentication.yml.
+- status: 401
+  code: rest_forbidden
+  title: Forbidden
+  detail: >-
+    The requested route or context requires authentication. Returned on /wp/v2/settings,
+    /wp/v2/themes, /wp/v2/plugins, /wp/v2/templates, /wp-abilities/v1/abilities,
+    /oembed/1.0/proxy and on any read with context=edit.
+  observed: true
+  example_body: '{"code":"rest_forbidden","message":"Sorry, you are not allowed to do that.","data":{"status":401}}'
+  remediation: >-
+    Use context=view (the default) or context=embed. The gated routes are deliberately excluded
+    from the captured OpenAPI documents.
+- status: 401
+  code: rest_forbidden_context
+  title: Forbidden context
+  detail: Returned when context=edit is requested without credentials.
+  observed: false
+  note: WordPress core behavior for the captured collections; not separately reproduced on this host.
+  remediation: Request context=view or context=embed.
+- status: 404
+  code: rest_post_invalid_id
+  title: Invalid post ID
+  detail: No published object exists with the requested numeric ID in that collection.
+  observed: true
+  example_request: GET /wp/v2/recipes/99999999
+  example_body: '{"code":"rest_post_invalid_id","message":"Invalid post ID.","data":{"status":404}}'
+  remediation: >-
+    Resolve IDs from a list or search call rather than guessing. Note that draft, pending and
+    private objects are invisible anonymously and are indistinguishable from a nonexistent ID.
+  source_operations:
+  - openapi/daring-foods-recipes-api-openapi.yml#getRecipe
+  - openapi/daring-foods-products-api-openapi.yml#getProduct
+  - openapi/daring-foods-foodservice-api-openapi.yml#getFoodserviceProduct
+  - openapi/daring-foods-pages-api-openapi.yml#getPage
+  - openapi/daring-foods-posts-api-openapi.yml#getPost
+- status: 404
+  code: rest_term_invalid
+  title: Invalid term ID
+  detail: No taxonomy term exists with the requested ID. The `post_tag` taxonomy is empty on this site, so every getTag call currently returns this.
+  observed: false
+  note: WordPress core behavior; the empty tag taxonomy on this host was verified (X-WP-Total 0).
+  source_operations:
+  - openapi/daring-foods-taxonomy-api-openapi.yml#getTag
+  - openapi/daring-foods-taxonomy-api-openapi.yml#getCategory
+- status: 404
+  code: rest_no_route
+  title: No route matched
+  detail: The request path does not match any registered REST route.
+  observed: false
+  note: >-
+    WordPress core behavior. Not reproducible from the site root on this host because the
+    WordPress/Cloudflare catch-all intercepts unmatched non-REST paths and returns an HTML 404
+    page instead - a caller must be prepared for an HTML body on a mistyped path.
+  remediation: Enumerate valid routes from GET /wp-json/ before constructing paths.
+gaps:
+- >-
+  No published error reference, status page or support channel exists for API consumers. Daring
+  Foods does not document this API at all.
+- >-
+  Error messages are English-only and carry no localization negotiation.
+- >-
+  A 404 on a single-item read cannot be distinguished from an unpublished object.
