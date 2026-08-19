@@ -1,9 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Daring Foods Media API
+  title: Daring Foods Posts Comments API
   version: wp/v2
-  summary: Public read access to the daring.com media library - product photography and recipe imagery.
-  description: 'Public, unauthenticated read access to the WordPress media library behind daring.com: 749 attachments at time of capture (observed in the X-WP-Total header), covering packaging and product photography, recipe imagery and site assets. Each record carries `source_url` (the canonical file), `mime_type`, `alt_text`, `filename`, `filesize`, and a `media_details` block enumerating every generated size variant with its own URL, width and height - which makes this the practical way to resolve the `featured_media` ID returned by the products, recipes, foodservice-products, posts and pages collections. Images are served from https://daring.com/wp-content/uploads/ and are subject to the site''s Terms & Conditions.'
+  summary: Public read access to the standard WordPress `post` type and its comment thread.
+  description: 'Public, unauthenticated read access to the standard WordPress `post` collection on daring.com and the comments attached to it. Daring Foods does not run an editorial blog: the collection held exactly ONE published post at time of capture - the WordPress default `hello-world` install stub from 2023-05-29 - while carrying 41 approved comments whose author names are opaque random strings consistent with automated comment spam rather than customer engagement. This collection is documented because it is publicly readable and the RSS feed at https://daring.com/feed/ is built from it, not because it carries editorial value. Recipes (208 items) are the site''s real content collection and live under a separate post type.'
   contact:
     name: Daring Foods
     url: https://daring.com/faq/
@@ -19,16 +19,16 @@ servers:
 - url: https://daring.com/wp-json
   description: Production
 tags:
-- name: Media
-  description: Media library attachments - product and recipe imagery.
+- name: Comments
+  description: Comments attached to posts. 41 approved, predominantly automated spam.
 paths:
-  /wp/v2/media:
+  /wp/v2/comments:
     get:
       tags:
-      - Media
-      operationId: listMedia
-      summary: List media items
-      description: Returns a paginated collection of media attachments. Verified live at 749 items.
+      - Comments
+      operationId: listComments
+      summary: List comments
+      description: Returns a paginated collection of approved comments. Verified live at 41 comments.
       parameters:
       - $ref: '#/components/parameters/page'
       - $ref: '#/components/parameters/perPage'
@@ -36,37 +36,27 @@ paths:
       - $ref: '#/components/parameters/order'
       - $ref: '#/components/parameters/orderby'
       - $ref: '#/components/parameters/context'
-      - $ref: '#/components/parameters/slugFilter'
       - $ref: '#/components/parameters/include'
       - $ref: '#/components/parameters/exclude'
       - $ref: '#/components/parameters/offset'
       - $ref: '#/components/parameters/fields'
-      - name: media_type
+      - name: post
         in: query
-        description: Limit results to attachments of a specific media type.
+        description: Limit results to comments on the given post IDs.
         schema:
-          type: string
-          enum:
-          - image
-          - video
-          - text
-          - application
-          - audio
-      - name: mime_type
-        in: query
-        description: Limit results to attachments of a specific MIME type.
-        schema:
-          type: string
+          type: array
+          items:
+            type: integer
       - name: parent
         in: query
-        description: Limit results to attachments of the given parent object IDs.
+        description: Limit results to comments with the given parent IDs.
         schema:
           type: array
           items:
             type: integer
       responses:
         '200':
-          description: A page of media items.
+          description: A page of comments.
           headers:
             X-WP-Total:
               $ref: '#/components/headers/XWPTotal'
@@ -81,20 +71,15 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MediaItem'
+                  $ref: '#/components/schemas/Comment'
               example:
-              - id: 1648
-                date: '2026-06-23T19:23:29'
-                slug: crispy-buffalo-plant-chicken-quesadillas
-                link: https://daring.com/recipes/crispy-buffalo-plant-chicken-quesadillas/crispy-buffalo-plant-chicken-quesadillas/
-                title:
-                  rendered: Crispy Buffalo Plant Chicken Quesadillas
-                alt_text: Crispy Buffalo Plant Chicken Quesadillas
-                media_type: image
-                mime_type: image/jpeg
-                source_url: https://daring.com/wp-content/uploads/2026/06/Crispy-Buffalo-Plant-Chicken-Quesadillas.jpg
-                filename: Crispy-Buffalo-Plant-Chicken-Quesadillas.jpg
-                filesize: 1241231
+              - id: 41
+                post: 1
+                parent: 0
+                author_name: 3F36IGqUNI1McL2wMxzpmSCV1lE
+                date: '2026-06-15T10:37:04'
+                status: approved
+                type: comment
         '400':
           description: Invalid request parameter (rest_invalid_param).
           content:
@@ -108,40 +93,35 @@ paths:
                   status: 400
                   params:
                     per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
-  /wp/v2/media/{id}:
+  /wp/v2/comments/{id}:
     get:
       tags:
-      - Media
-      operationId: getMediaItem
-      summary: Retrieve a media item
-      description: Returns a single media attachment by numeric ID, including every generated size variant. Use this to resolve a `featured_media` ID from any content collection.
+      - Comments
+      operationId: getComment
+      summary: Retrieve a comment
+      description: Returns a single approved comment by numeric ID.
       parameters:
       - $ref: '#/components/parameters/idPath'
       - $ref: '#/components/parameters/context'
       - $ref: '#/components/parameters/fields'
       responses:
         '200':
-          description: The requested media item.
+          description: The requested comment.
           headers:
             Cache-Control:
               $ref: '#/components/headers/CacheControl'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MediaItem'
+                $ref: '#/components/schemas/Comment'
               example:
-                id: 1648
-                date: '2026-06-23T19:23:29'
-                slug: crispy-buffalo-plant-chicken-quesadillas
-                link: https://daring.com/recipes/crispy-buffalo-plant-chicken-quesadillas/crispy-buffalo-plant-chicken-quesadillas/
-                title:
-                  rendered: Crispy Buffalo Plant Chicken Quesadillas
-                alt_text: Crispy Buffalo Plant Chicken Quesadillas
-                media_type: image
-                mime_type: image/jpeg
-                source_url: https://daring.com/wp-content/uploads/2026/06/Crispy-Buffalo-Plant-Chicken-Quesadillas.jpg
-                filename: Crispy-Buffalo-Plant-Chicken-Quesadillas.jpg
-                filesize: 1241231
+                id: 41
+                post: 1
+                parent: 0
+                author_name: 3F36IGqUNI1McL2wMxzpmSCV1lE
+                date: '2026-06-15T10:37:04'
+                status: approved
+                type: comment
         '404':
           description: Object not found, or no route matches the request.
           content:
@@ -197,14 +177,6 @@ components:
         - asc
         - desc
         default: desc
-    slugFilter:
-      name: slug
-      in: query
-      description: Limit results to items with one of the given slugs.
-      schema:
-        type: array
-        items:
-          type: string
     page:
       name: page
       in: query
@@ -257,76 +229,24 @@ components:
       description: Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host.
       schema:
         type: string
+  headers:
+    LinkPagination:
+      description: RFC 8288 Link header carrying `prev` and `next` relations for the collection.
+      schema:
+        type: string
+    XWPTotal:
+      description: Total number of items in the unpaginated collection.
+      schema:
+        type: integer
+    XWPTotalPages:
+      description: Total number of pages available at the requested per_page size.
+      schema:
+        type: integer
+    CacheControl:
+      description: 'Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable: SHORT).'
+      schema:
+        type: string
   schemas:
-    MediaItem:
-      type: object
-      description: A media library attachment.
-      properties:
-        id:
-          type: integer
-        date:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        slug:
-          type: string
-        type:
-          type: string
-          examples:
-          - attachment
-        link:
-          type: string
-          format: uri
-          description: Attachment page URL on daring.com.
-        title:
-          type: object
-          properties:
-            rendered:
-              type: string
-        author:
-          type: integer
-        caption:
-          type: object
-          properties:
-            rendered:
-              type: string
-        description:
-          type: object
-          properties:
-            rendered:
-              type: string
-        alt_text:
-          type: string
-          description: Alternative text for accessibility. Frequently empty on this host.
-        media_type:
-          type: string
-          examples:
-          - image
-        mime_type:
-          type: string
-          examples:
-          - image/jpeg
-        filename:
-          type: string
-        filesize:
-          type: integer
-          description: Size of the original file in bytes.
-        media_details:
-          type: object
-          description: Width, height, file path, EXIF metadata, and a `sizes` map of every generated variant with its own source_url.
-        source_url:
-          type: string
-          format: uri
-          description: Direct URL of the original uploaded file.
-        post:
-          type:
-          - integer
-          - 'null'
-          description: ID of the object the attachment is attached to.
-        _links:
-          type: object
     Error:
       type: object
       description: 'The WordPress REST error envelope. NOTE: this is NOT RFC 9457 problem+json - the media type is application/json and the shape is {code, message, data}.'
@@ -361,20 +281,50 @@ components:
             details:
               type: object
               description: 'Present on rest_invalid_param: per-parameter structured detail.'
-  headers:
-    LinkPagination:
-      description: RFC 8288 Link header carrying `prev` and `next` relations for the collection.
-      schema:
-        type: string
-    XWPTotal:
-      description: Total number of items in the unpaginated collection.
-      schema:
-        type: integer
-    XWPTotalPages:
-      description: Total number of pages available at the requested per_page size.
-      schema:
-        type: integer
-    CacheControl:
-      description: 'Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable: SHORT).'
-      schema:
-        type: string
+    Comment:
+      type: object
+      description: A comment on a WordPress post.
+      properties:
+        id:
+          type: integer
+        post:
+          type: integer
+          description: ID of the post the comment belongs to.
+        parent:
+          type: integer
+          description: ID of the parent comment; 0 for top-level.
+        author:
+          type: integer
+          description: User ID of the comment author; 0 for anonymous.
+        author_name:
+          type: string
+          description: Display name supplied by the commenter.
+        author_url:
+          type: string
+        date:
+          type: string
+          format: date-time
+        date_gmt:
+          type: string
+          format: date-time
+        content:
+          type: object
+          properties:
+            rendered:
+              type: string
+        link:
+          type: string
+          format: uri
+        status:
+          type: string
+          examples:
+          - approved
+        type:
+          type: string
+          examples:
+          - comment
+        author_avatar_urls:
+          type: object
+          description: Gravatar URLs keyed by pixel size.
+        _links:
+          type: object

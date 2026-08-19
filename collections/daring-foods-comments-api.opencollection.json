@@ -1,0 +1,134 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Daring Foods Posts Comments API",
+    "version": "wp/v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Comments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List comments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://daring.com/wp-json/wp/v2/comments",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Current page of the collection (1-based)."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items returned per page. Verified server cap is 100; a larger value returns HTTP 400 rest_invalid_param."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to those matching a free-text string."
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Sort direction."
+              },
+              {
+                "name": "orderby",
+                "value": "",
+                "type": "query",
+                "description": "Field to sort the collection by."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401."
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Limit result set to specific IDs."
+              },
+              {
+                "name": "exclude",
+                "value": "",
+                "type": "query",
+                "description": "Ensure result set excludes specific IDs."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offset the result set by a specific number of items."
+              },
+              {
+                "name": "_fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host."
+              },
+              {
+                "name": "post",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to comments on the given post IDs."
+              },
+              {
+                "name": "parent",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to comments with the given parent IDs."
+              }
+            ]
+          },
+          "docs": "Returns a paginated collection of approved comments. Verified live at 41 comments."
+        },
+        {
+          "info": {
+            "name": "Retrieve a comment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://daring.com/wp-json/wp/v2/comments/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Unique numeric identifier for the object."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401."
+              },
+              {
+                "name": "_fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host."
+              }
+            ]
+          },
+          "docs": "Returns a single approved comment by numeric ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

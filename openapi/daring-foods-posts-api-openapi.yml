@@ -1,15 +1,9 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Daring Foods Posts API
   version: wp/v2
   summary: Public read access to the standard WordPress `post` type and its comment thread.
-  description: 'Public, unauthenticated read access to the standard WordPress `post` collection on daring.com and
-    the comments attached to it. Daring Foods does not run an editorial blog: the collection held exactly ONE published
-    post at time of capture - the WordPress default `hello-world` install stub from 2023-05-29 - while carrying
-    41 approved comments whose author names are opaque random strings consistent with automated comment spam rather
-    than customer engagement. This collection is documented because it is publicly readable and the RSS feed at
-    https://daring.com/feed/ is built from it, not because it carries editorial value. Recipes (208 items) are the
-    site''s real content collection and live under a separate post type.'
+  description: 'Public, unauthenticated read access to the standard WordPress `post` collection on daring.com and the comments attached to it. Daring Foods does not run an editorial blog: the collection held exactly ONE published post at time of capture - the WordPress default `hello-world` install stub from 2023-05-29 - while carrying 41 approved comments whose author names are opaque random strings consistent with automated comment spam rather than customer engagement. This collection is documented because it is publicly readable and the RSS feed at https://daring.com/feed/ is built from it, not because it carries editorial value. Recipes (208 items) are the site''s real content collection and live under a separate post type.'
   contact:
     name: Daring Foods
     url: https://daring.com/faq/
@@ -20,19 +14,13 @@ info:
     method: derived
     source: https://daring.com/wp-json/
     derived_on: '2026-08-04'
-    note: Routes enumerated from the live WordPress route index at https://daring.com/wp-json/ (222 routes across
-      10 namespaces) on 2026-08-04, then probed anonymously one at a time; only routes verified to return HTTP 200
-      without credentials are documented here. Schemas reflect fields observed in the live responses. Write methods
-      exist on the same routes but require WordPress authentication (cookie + X-WP-Nonce, or Application Passwords)
-      and return HTTP 401 anonymously, so they are not documented. No fabricated operations, parameters or fields.
+    note: Routes enumerated from the live WordPress route index at https://daring.com/wp-json/ (222 routes across 10 namespaces) on 2026-08-04, then probed anonymously one at a time; only routes verified to return HTTP 200 without credentials are documented here. Schemas reflect fields observed in the live responses. Write methods exist on the same routes but require WordPress authentication (cookie + X-WP-Nonce, or Application Passwords) and return HTTP 401 anonymously, so they are not documented. No fabricated operations, parameters or fields.
 servers:
 - url: https://daring.com/wp-json
   description: Production
 tags:
 - name: Posts
   description: Standard WordPress posts. Effectively unused on this site (1 item, the install default).
-- name: Comments
-  description: Comments attached to posts. 41 approved, predominantly automated spam.
 paths:
   /wp/v2/posts:
     get:
@@ -171,119 +159,16 @@ paths:
                 message: Invalid post ID.
                 data:
                   status: 404
-  /wp/v2/comments:
-    get:
-      tags:
-      - Comments
-      operationId: listComments
-      summary: List comments
-      description: Returns a paginated collection of approved comments. Verified live at 41 comments.
-      parameters:
-      - $ref: '#/components/parameters/page'
-      - $ref: '#/components/parameters/perPage'
-      - $ref: '#/components/parameters/search'
-      - $ref: '#/components/parameters/order'
-      - $ref: '#/components/parameters/orderby'
-      - $ref: '#/components/parameters/context'
-      - $ref: '#/components/parameters/include'
-      - $ref: '#/components/parameters/exclude'
-      - $ref: '#/components/parameters/offset'
-      - $ref: '#/components/parameters/fields'
-      - name: post
-        in: query
-        description: Limit results to comments on the given post IDs.
-        schema:
-          type: array
-          items:
-            type: integer
-      - name: parent
-        in: query
-        description: Limit results to comments with the given parent IDs.
-        schema:
-          type: array
-          items:
-            type: integer
-      responses:
-        '200':
-          description: A page of comments.
-          headers:
-            X-WP-Total:
-              $ref: '#/components/headers/XWPTotal'
-            X-WP-TotalPages:
-              $ref: '#/components/headers/XWPTotalPages'
-            Link:
-              $ref: '#/components/headers/LinkPagination'
-            Cache-Control:
-              $ref: '#/components/headers/CacheControl'
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Comment'
-              example:
-              - id: 41
-                post: 1
-                parent: 0
-                author_name: 3F36IGqUNI1McL2wMxzpmSCV1lE
-                date: '2026-06-15T10:37:04'
-                status: approved
-                type: comment
-        '400':
-          description: Invalid request parameter (rest_invalid_param).
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                code: rest_invalid_param
-                message: 'Invalid parameter(s): per_page'
-                data:
-                  status: 400
-                  params:
-                    per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
-  /wp/v2/comments/{id}:
-    get:
-      tags:
-      - Comments
-      operationId: getComment
-      summary: Retrieve a comment
-      description: Returns a single approved comment by numeric ID.
-      parameters:
-      - $ref: '#/components/parameters/idPath'
-      - $ref: '#/components/parameters/context'
-      - $ref: '#/components/parameters/fields'
-      responses:
-        '200':
-          description: The requested comment.
-          headers:
-            Cache-Control:
-              $ref: '#/components/headers/CacheControl'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Comment'
-              example:
-                id: 41
-                post: 1
-                parent: 0
-                author_name: 3F36IGqUNI1McL2wMxzpmSCV1lE
-                date: '2026-06-15T10:37:04'
-                status: approved
-                type: comment
-        '404':
-          description: Object not found, or no route matches the request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                code: rest_post_invalid_id
-                message: Invalid post ID.
-                data:
-                  status: 404
 components:
   parameters:
+    slugFilter:
+      name: slug
+      in: query
+      description: Limit results to items with one of the given slugs.
+      schema:
+        type: array
+        items:
+          type: string
     page:
       name: page
       in: query
@@ -295,29 +180,20 @@ components:
     perPage:
       name: per_page
       in: query
-      description: Maximum number of items returned per page. Verified server cap is 100; a larger value returns
-        HTTP 400 rest_invalid_param.
+      description: Maximum number of items returned per page. Verified server cap is 100; a larger value returns HTTP 400 rest_invalid_param.
       schema:
         type: integer
         minimum: 1
         maximum: 100
         default: 10
-    search:
-      name: search
+    include:
+      name: include
       in: query
-      description: Limit results to those matching a free-text string.
+      description: Limit result set to specific IDs.
       schema:
-        type: string
-    order:
-      name: order
-      in: query
-      description: Sort direction.
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
-        default: desc
+        type: array
+        items:
+          type: integer
     orderby:
       name: orderby
       in: query
@@ -336,43 +212,13 @@ components:
     context:
       name: context
       in: query
-      description: Scope under which the request is made; determines the fields present in the response. Anonymous
-        callers may use `view` and `embed` only - `edit` returns HTTP 401.
+      description: Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401.
       schema:
         type: string
         enum:
         - view
         - embed
         default: view
-    fields:
-      name: _fields
-      in: query
-      description: Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress
-        core response-shaping convention, verified working on this host.
-      schema:
-        type: string
-    embed:
-      name: _embed
-      in: query
-      description: Inline embeddable linked resources (featured media, terms, author) into an `_embedded` object.
-      schema:
-        type: boolean
-    slugFilter:
-      name: slug
-      in: query
-      description: Limit results to items with one of the given slugs.
-      schema:
-        type: array
-        items:
-          type: string
-    include:
-      name: include
-      in: query
-      description: Limit result set to specific IDs.
-      schema:
-        type: array
-        items:
-          type: integer
     exclude:
       name: exclude
       in: query
@@ -381,13 +227,6 @@ components:
         type: array
         items:
           type: integer
-    offset:
-      name: offset
-      in: query
-      description: Offset the result set by a specific number of items.
-      schema:
-        type: integer
-        minimum: 0
     idPath:
       name: id
       in: path
@@ -395,29 +234,45 @@ components:
       description: Unique numeric identifier for the object.
       schema:
         type: integer
-  headers:
-    XWPTotal:
-      description: Total number of items in the unpaginated collection.
-      schema:
-        type: integer
-    XWPTotalPages:
-      description: Total number of pages available at the requested per_page size.
-      schema:
-        type: integer
-    LinkPagination:
-      description: RFC 8288 Link header carrying `prev` and `next` relations for the collection.
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a free-text string.
       schema:
         type: string
-    CacheControl:
-      description: 'Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable:
-        SHORT).'
+    fields:
+      name: _fields
+      in: query
+      description: Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host.
       schema:
         type: string
+    offset:
+      name: offset
+      in: query
+      description: Offset the result set by a specific number of items.
+      schema:
+        type: integer
+        minimum: 0
+    order:
+      name: order
+      in: query
+      description: Sort direction.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: desc
+    embed:
+      name: _embed
+      in: query
+      description: Inline embeddable linked resources (featured media, terms, author) into an `_embedded` object.
+      schema:
+        type: boolean
   schemas:
     Error:
       type: object
-      description: 'The WordPress REST error envelope. NOTE: this is NOT RFC 9457 problem+json - the media type
-        is application/json and the shape is {code, message, data}.'
+      description: 'The WordPress REST error envelope. NOTE: this is NOT RFC 9457 problem+json - the media type is application/json and the shape is {code, message, data}.'
       required:
       - code
       - message
@@ -502,8 +357,7 @@ components:
           properties:
             rendered:
               type: string
-          description: 'Item title. NOTE: HTML entities are escaped in the rendered value (e.g. `Buffalo Mac &#038;
-            Cheese`).'
+          description: 'Item title. NOTE: HTML entities are escaped in the rendered value (e.g. `Buffalo Mac &#038; Cheese`).'
         featured_media:
           type: integer
           description: Media library ID of the featured image; 0 when unset. Resolve via /wp/v2/media/{id} or `_embed`.
@@ -516,9 +370,7 @@ components:
             type: string
           description: CSS class names WordPress generates for the item.
         acf:
-          description: Advanced Custom Fields payload. Observed EMPTY (`[]`) on this host - the site runs ACF but
-            does not expose field values over REST, so nutrition, ingredient and recipe-step data are NOT available
-            through this API.
+          description: Advanced Custom Fields payload. Observed EMPTY (`[]`) on this host - the site runs ACF but does not expose field values over REST, so nutrition, ingredient and recipe-step data are NOT available through this API.
           type:
           - array
           - object
@@ -584,50 +436,20 @@ components:
           type: boolean
         format:
           type: string
-    Comment:
-      type: object
-      description: A comment on a WordPress post.
-      properties:
-        id:
-          type: integer
-        post:
-          type: integer
-          description: ID of the post the comment belongs to.
-        parent:
-          type: integer
-          description: ID of the parent comment; 0 for top-level.
-        author:
-          type: integer
-          description: User ID of the comment author; 0 for anonymous.
-        author_name:
-          type: string
-          description: Display name supplied by the commenter.
-        author_url:
-          type: string
-        date:
-          type: string
-          format: date-time
-        date_gmt:
-          type: string
-          format: date-time
-        content:
-          type: object
-          properties:
-            rendered:
-              type: string
-        link:
-          type: string
-          format: uri
-        status:
-          type: string
-          examples:
-          - approved
-        type:
-          type: string
-          examples:
-          - comment
-        author_avatar_urls:
-          type: object
-          description: Gravatar URLs keyed by pixel size.
-        _links:
-          type: object
+  headers:
+    XWPTotal:
+      description: Total number of items in the unpaginated collection.
+      schema:
+        type: integer
+    CacheControl:
+      description: 'Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable: SHORT).'
+      schema:
+        type: string
+    LinkPagination:
+      description: RFC 8288 Link header carrying `prev` and `next` relations for the collection.
+      schema:
+        type: string
+    XWPTotalPages:
+      description: Total number of pages available at the requested per_page size.
+      schema:
+        type: integer

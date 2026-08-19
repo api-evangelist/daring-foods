@@ -1,0 +1,202 @@
+{
+  "item": [
+    {
+      "id": "2d6fe6a3-c2db-439a-817c-248543438823",
+      "name": "oEmbed",
+      "description": {
+        "content": "oEmbed 1.0 provider endpoint.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "38295aba-97b9-48d3-9bec-4b40db07d48d",
+          "name": "Resolve a daring.com URL to oEmbed metadata",
+          "request": {
+            "name": "Resolve a daring.com URL to oEmbed metadata",
+            "description": {
+              "content": "Returns oEmbed 1.0 metadata for any public daring.com URL. Verified live against a recipe permalink.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "oembed",
+                "1.0",
+                "embed"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "url",
+                  "value": "<uri>",
+                  "description": "(Required) The daring.com URL to embed, percent-encoded."
+                },
+                {
+                  "disabled": false,
+                  "key": "format",
+                  "value": "json",
+                  "description": "Response format. Both values verified live."
+                },
+                {
+                  "disabled": false,
+                  "key": "maxwidth",
+                  "value": "600",
+                  "description": "Maximum width of the embed in pixels."
+                },
+                {
+                  "disabled": false,
+                  "key": "maxheight",
+                  "value": "<integer>",
+                  "description": "Maximum height of the embed in pixels."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3ac71398-1dc2-4b27-9a6d-b8ecf8297530",
+              "name": "oEmbed metadata for the requested URL.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oembed",
+                    "1.0",
+                    "embed"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "url",
+                      "value": "<uri>"
+                    },
+                    {
+                      "key": "format",
+                      "value": "json"
+                    },
+                    {
+                      "key": "maxwidth",
+                      "value": "600"
+                    },
+                    {
+                      "key": "maxheight",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"version\": \"1.0\",\n  \"provider_name\": \"Daring Foods Plant Chicken | Chicken Better. Chicken On.\",\n  \"provider_url\": \"https://daring.com\",\n  \"author_name\": \"Joe Tao\",\n  \"author_url\": \"https://daring.com/author/joedaring-com/\",\n  \"title\": \"Crispy Buffalo Plant Chicken Quesadillas - Daring Foods Plant Chicken | Chicken Better. Chicken On.\",\n  \"type\": \"rich\",\n  \"width\": 600,\n  \"height\": 338,\n  \"thumbnail_url\": \"https://daring.com/wp-content/uploads/2026/06/Crispy-Buffalo-Plant-Chicken-Quesadillas.jpg\",\n  \"thumbnail_width\": 2400,\n  \"thumbnail_height\": 4267\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4b51ca15-a16a-4eba-9185-0d8cc9f03484",
+              "name": "Object not found, or no route matches the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oembed",
+                    "1.0",
+                    "embed"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "url",
+                      "value": "<uri>"
+                    },
+                    {
+                      "key": "format",
+                      "value": "json"
+                    },
+                    {
+                      "key": "maxwidth",
+                      "value": "600"
+                    },
+                    {
+                      "key": "maxheight",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"rest_post_invalid_id\",\n  \"message\": \"Invalid post ID.\",\n  \"data\": {\n    \"status\": 404\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://daring.com/wp-json",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "c47dbe49-26c4-4491-be66-82b098c294b9",
+    "name": "Daring Foods O Embed API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "daring.com is a registered oEmbed 1.0 provider: any public daring.com URL - a recipe, a product page, a marketing page - can be resolved to embeddable rich metadata (title, author, thumbnail, and an iframe `html` payload) in a single unauthenticated call. The endpoint is advertised in the site's HTML head via `application/json+oembed` and `text/xml+oembed` link relations, and it answers in both JSON and XML. This is the lowest-friction way to get a titled, illustrated card for a Daring recipe without touching the content collections. The related /oembed/1.0/proxy route requires authentication (verified HTTP 401 anonymously) and is not documented here.\n\nContact Support:\n Name: Daring Foods",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,324 @@
+{
+  "item": [
+    {
+      "id": "be66262c-0fec-441c-abb1-26b8ed0e8ae8",
+      "name": "Search",
+      "description": {
+        "content": "Cross-content keyword search.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "e759c5a5-534c-4f9e-9b8a-4a6d99128a81",
+          "name": "Search site content",
+          "request": {
+            "name": "Search site content",
+            "description": {
+              "content": "Returns matches across all searchable post types. Narrow with `subtype` to search only recipes or only products.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "wp",
+                "v2",
+                "search"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Current page of the collection (1-based)."
+                },
+                {
+                  "disabled": false,
+                  "key": "per_page",
+                  "value": "10",
+                  "description": "Maximum number of items returned per page. Verified server cap is 100; a larger value returns HTTP 400 rest_invalid_param."
+                },
+                {
+                  "disabled": false,
+                  "key": "search",
+                  "value": "<string>",
+                  "description": "Limit results to those matching a free-text string."
+                },
+                {
+                  "disabled": false,
+                  "key": "_fields",
+                  "value": "<string>",
+                  "description": "Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host."
+                },
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "post",
+                  "description": "Limit results to a search object type."
+                },
+                {
+                  "disabled": false,
+                  "key": "subtype",
+                  "value": "<string>",
+                  "description": "Limit results to specific post types. Verified values on this site: recipes, products, foodservice-products, page, post; `any` searches all."
+                },
+                {
+                  "disabled": false,
+                  "key": "subtype",
+                  "value": "<string>",
+                  "description": "Limit results to specific post types. Verified values on this site: recipes, products, foodservice-products, page, post; `any` searches all."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<integer>",
+                  "description": "Ensure result set excludes specific IDs."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<integer>",
+                  "description": "Ensure result set excludes specific IDs."
+                },
+                {
+                  "disabled": false,
+                  "key": "include",
+                  "value": "<integer>",
+                  "description": "Limit result set to specific IDs."
+                },
+                {
+                  "disabled": false,
+                  "key": "include",
+                  "value": "<integer>",
+                  "description": "Limit result set to specific IDs."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "aaa4ff3e-0221-4d81-9774-731f37e31380",
+              "name": "A page of search results.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "wp",
+                    "v2",
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "10"
+                    },
+                    {
+                      "key": "search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "_fields",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "type",
+                      "value": "post"
+                    },
+                    {
+                      "key": "subtype",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "subtype",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "include",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "include",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Total number of items in the unpaginated collection.",
+                  "key": "X-WP-Total",
+                  "value": "3656"
+                },
+                {
+                  "disabled": false,
+                  "description": "Total number of pages available at the requested per_page size.",
+                  "key": "X-WP-TotalPages",
+                  "value": "3656"
+                },
+                {
+                  "disabled": false,
+                  "description": "RFC 8288 Link header carrying `prev` and `next` relations for the collection.",
+                  "key": "Link",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable: SHORT).",
+                  "key": "Cache-Control",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 1647,\n    \"title\": \"Crispy Buffalo Plant Chicken Quesadillas\",\n    \"url\": \"https://daring.com/recipes/crispy-buffalo-plant-chicken-quesadillas/\",\n    \"type\": \"post\",\n    \"subtype\": \"recipes\"\n  },\n  {\n    \"id\": 1621,\n    \"title\": \"SUPER(bowl) Spicy Buffalo Plant Chicken Salad\",\n    \"url\": \"https://daring.com/recipes/superbowl-spicy-buffalo-plant-chicken-salad/\",\n    \"type\": \"post\",\n    \"subtype\": \"recipes\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "17db9e08-0efa-432c-8096-8fc6e31e370e",
+              "name": "Invalid request parameter (rest_invalid_param).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "wp",
+                    "v2",
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "10"
+                    },
+                    {
+                      "key": "search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "_fields",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "type",
+                      "value": "post"
+                    },
+                    {
+                      "key": "subtype",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "subtype",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "include",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "include",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"rest_invalid_param\",\n  \"message\": \"Invalid parameter(s): per_page\",\n  \"data\": {\n    \"status\": 400,\n    \"params\": {\n      \"per_page\": \"per_page must be between 1 (inclusive) and 100 (inclusive)\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://daring.com/wp-json",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "14e5df21-e312-455f-a315-a8a790950d90",
+    "name": "Daring Foods Search API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public, unauthenticated cross-content search over daring.com via the WordPress core search controller. A single query returns lightweight {id, title, url, type, subtype} records spanning every searchable post type on the site - `recipes`, `products`, `foodservice-products`, `page` and `post` - with `subtype` carrying which collection each hit came from, so a result can be resolved back to its full record through the matching collection endpoint. This is the cheapest single call for an agent that wants to find Daring content by keyword without walking 208 recipes page by page.\n\nContact Support:\n Name: Daring Foods",
+      "type": "text/plain"
+    }
+  }
+}

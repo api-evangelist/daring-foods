@@ -1,0 +1,146 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Daring Foods Media API",
+    "version": "wp/v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Media",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List media items",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://daring.com/wp-json/wp/v2/media",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Current page of the collection (1-based)."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items returned per page. Verified server cap is 100; a larger value returns HTTP 400 rest_invalid_param."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to those matching a free-text string."
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Sort direction."
+              },
+              {
+                "name": "orderby",
+                "value": "",
+                "type": "query",
+                "description": "Field to sort the collection by."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401."
+              },
+              {
+                "name": "slug",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to items with one of the given slugs."
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Limit result set to specific IDs."
+              },
+              {
+                "name": "exclude",
+                "value": "",
+                "type": "query",
+                "description": "Ensure result set excludes specific IDs."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offset the result set by a specific number of items."
+              },
+              {
+                "name": "_fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host."
+              },
+              {
+                "name": "media_type",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to attachments of a specific media type."
+              },
+              {
+                "name": "mime_type",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to attachments of a specific MIME type."
+              },
+              {
+                "name": "parent",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to attachments of the given parent object IDs."
+              }
+            ]
+          },
+          "docs": "Returns a paginated collection of media attachments. Verified live at 749 items."
+        },
+        {
+          "info": {
+            "name": "Retrieve a media item",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://daring.com/wp-json/wp/v2/media/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Unique numeric identifier for the object."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401."
+              },
+              {
+                "name": "_fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host."
+              }
+            ]
+          },
+          "docs": "Returns a single media attachment by numeric ID, including every generated size variant. Use this to resolve a `featured_media` ID from any content collection."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,152 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Daring Foods Pages API",
+    "version": "wp/v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Pages",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List pages",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://daring.com/wp-json/wp/v2/pages",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Current page of the collection (1-based)."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items returned per page. Verified server cap is 100; a larger value returns HTTP 400 rest_invalid_param."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to those matching a free-text string."
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Sort direction."
+              },
+              {
+                "name": "orderby",
+                "value": "",
+                "type": "query",
+                "description": "Field to sort the collection by."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401."
+              },
+              {
+                "name": "slug",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to items with one of the given slugs."
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Limit result set to specific IDs."
+              },
+              {
+                "name": "exclude",
+                "value": "",
+                "type": "query",
+                "description": "Ensure result set excludes specific IDs."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offset the result set by a specific number of items."
+              },
+              {
+                "name": "_fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host."
+              },
+              {
+                "name": "_embed",
+                "value": "",
+                "type": "query",
+                "description": "Inline embeddable linked resources (featured media, terms, author) into an `_embedded` object."
+              },
+              {
+                "name": "parent",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to pages whose parent is one of the given IDs."
+              },
+              {
+                "name": "menu_order",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to pages with a specific menu_order value."
+              }
+            ]
+          },
+          "docs": "Returns a paginated collection of published pages. Verified live at 17 pages."
+        },
+        {
+          "info": {
+            "name": "Retrieve a page",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://daring.com/wp-json/wp/v2/pages/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Unique numeric identifier for the object."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401."
+              },
+              {
+                "name": "_fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host."
+              },
+              {
+                "name": "_embed",
+                "value": "",
+                "type": "query",
+                "description": "Inline embeddable linked resources (featured media, terms, author) into an `_embedded` object."
+              }
+            ]
+          },
+          "docs": "Returns a single published page by numeric ID, including its full rendered content."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

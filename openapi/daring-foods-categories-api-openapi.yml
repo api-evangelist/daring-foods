@@ -1,9 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Daring Foods Media API
+  title: Daring Foods Taxonomy Categories API
   version: wp/v2
-  summary: Public read access to the daring.com media library - product photography and recipe imagery.
-  description: 'Public, unauthenticated read access to the WordPress media library behind daring.com: 749 attachments at time of capture (observed in the X-WP-Total header), covering packaging and product photography, recipe imagery and site assets. Each record carries `source_url` (the canonical file), `mime_type`, `alt_text`, `filename`, `filesize`, and a `media_details` block enumerating every generated size variant with its own URL, width and height - which makes this the practical way to resolve the `featured_media` ID returned by the products, recipes, foodservice-products, posts and pages collections. Images are served from https://daring.com/wp-content/uploads/ and are subject to the site''s Terms & Conditions.'
+  summary: Public read access to the cooking-method taxonomy that classifies the recipe library.
+  description: 'Public, unauthenticated read access to the term taxonomies on daring.com. The `category` taxonomy is the functional one and is shared between the `post` and `recipes` types: on this site its 9 terms are cooking methods, not editorial subjects - Saute (22 recipes), Oven Baked (13), Air Fry (7), Microwave (7), Pan Fry (5), Grill Pan (5), Dutch Oven (1), Braise (1) and the WordPress default Uncategorized (4). Combined with the `categories` filter on /wp/v2/recipes this is what makes the recipe library queryable by how the dish is cooked. The `post_tag` taxonomy is registered but empty (0 terms), which the tags operations below report faithfully rather than omit.'
   contact:
     name: Daring Foods
     url: https://daring.com/faq/
@@ -19,16 +19,16 @@ servers:
 - url: https://daring.com/wp-json
   description: Production
 tags:
-- name: Media
-  description: Media library attachments - product and recipe imagery.
+- name: Categories
+  description: The `category` taxonomy - cooking methods for the recipe library.
 paths:
-  /wp/v2/media:
+  /wp/v2/categories:
     get:
       tags:
-      - Media
-      operationId: listMedia
-      summary: List media items
-      description: Returns a paginated collection of media attachments. Verified live at 749 items.
+      - Categories
+      operationId: listCategories
+      summary: List categories
+      description: Returns the `category` terms - the cooking-method classification for the recipe library. Verified live at 9 terms.
       parameters:
       - $ref: '#/components/parameters/page'
       - $ref: '#/components/parameters/perPage'
@@ -41,32 +41,25 @@ paths:
       - $ref: '#/components/parameters/exclude'
       - $ref: '#/components/parameters/offset'
       - $ref: '#/components/parameters/fields'
-      - name: media_type
+      - name: hide_empty
         in: query
-        description: Limit results to attachments of a specific media type.
+        description: Whether to hide terms not assigned to any posts.
         schema:
-          type: string
-          enum:
-          - image
-          - video
-          - text
-          - application
-          - audio
-      - name: mime_type
+          type: boolean
+          default: false
+      - name: post
         in: query
-        description: Limit results to attachments of a specific MIME type.
+        description: Limit results to terms assigned to a specific post.
         schema:
-          type: string
+          type: integer
       - name: parent
         in: query
-        description: Limit results to attachments of the given parent object IDs.
+        description: Limit results to terms with the given parent term ID.
         schema:
-          type: array
-          items:
-            type: integer
+          type: integer
       responses:
         '200':
-          description: A page of media items.
+          description: A page of category terms.
           headers:
             X-WP-Total:
               $ref: '#/components/headers/XWPTotal'
@@ -81,20 +74,16 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MediaItem'
+                  $ref: '#/components/schemas/Category'
               example:
-              - id: 1648
-                date: '2026-06-23T19:23:29'
-                slug: crispy-buffalo-plant-chicken-quesadillas
-                link: https://daring.com/recipes/crispy-buffalo-plant-chicken-quesadillas/crispy-buffalo-plant-chicken-quesadillas/
-                title:
-                  rendered: Crispy Buffalo Plant Chicken Quesadillas
-                alt_text: Crispy Buffalo Plant Chicken Quesadillas
-                media_type: image
-                mime_type: image/jpeg
-                source_url: https://daring.com/wp-content/uploads/2026/06/Crispy-Buffalo-Plant-Chicken-Quesadillas.jpg
-                filename: Crispy-Buffalo-Plant-Chicken-Quesadillas.jpg
-                filesize: 1241231
+              - id: 15
+                count: 7
+                description: ''
+                link: https://daring.com/category/air-fry/
+                name: Air Fry
+                slug: air-fry
+                taxonomy: category
+                parent: 0
         '400':
           description: Invalid request parameter (rest_invalid_param).
           content:
@@ -108,40 +97,36 @@ paths:
                   status: 400
                   params:
                     per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
-  /wp/v2/media/{id}:
+  /wp/v2/categories/{id}:
     get:
       tags:
-      - Media
-      operationId: getMediaItem
-      summary: Retrieve a media item
-      description: Returns a single media attachment by numeric ID, including every generated size variant. Use this to resolve a `featured_media` ID from any content collection.
+      - Categories
+      operationId: getCategory
+      summary: Retrieve a category
+      description: Returns a single `category` term by numeric ID.
       parameters:
       - $ref: '#/components/parameters/idPath'
       - $ref: '#/components/parameters/context'
       - $ref: '#/components/parameters/fields'
       responses:
         '200':
-          description: The requested media item.
+          description: The requested category term.
           headers:
             Cache-Control:
               $ref: '#/components/headers/CacheControl'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MediaItem'
+                $ref: '#/components/schemas/Category'
               example:
-                id: 1648
-                date: '2026-06-23T19:23:29'
-                slug: crispy-buffalo-plant-chicken-quesadillas
-                link: https://daring.com/recipes/crispy-buffalo-plant-chicken-quesadillas/crispy-buffalo-plant-chicken-quesadillas/
-                title:
-                  rendered: Crispy Buffalo Plant Chicken Quesadillas
-                alt_text: Crispy Buffalo Plant Chicken Quesadillas
-                media_type: image
-                mime_type: image/jpeg
-                source_url: https://daring.com/wp-content/uploads/2026/06/Crispy-Buffalo-Plant-Chicken-Quesadillas.jpg
-                filename: Crispy-Buffalo-Plant-Chicken-Quesadillas.jpg
-                filesize: 1241231
+                id: 15
+                count: 7
+                description: ''
+                link: https://daring.com/category/air-fry/
+                name: Air Fry
+                slug: air-fry
+                taxonomy: category
+                parent: 0
         '404':
           description: Object not found, or no route matches the request.
           content:
@@ -154,6 +139,86 @@ paths:
                 data:
                   status: 404
 components:
+  schemas:
+    Category:
+      type: object
+      description: A taxonomy term.
+      properties:
+        id:
+          type: integer
+        count:
+          type: integer
+          description: Number of published objects assigned to the term.
+        description:
+          type: string
+        link:
+          type: string
+          format: uri
+          description: Public archive URL for the term.
+        name:
+          type: string
+          examples:
+          - Air Fry
+        slug:
+          type: string
+          examples:
+          - air-fry
+        taxonomy:
+          type: string
+          examples:
+          - category
+        parent:
+          type: integer
+          description: Parent term ID; 0 for top-level. Only on hierarchical taxonomies.
+        meta:
+          type:
+          - array
+          - object
+        acf:
+          type:
+          - array
+          - object
+          description: Empty over REST on this host.
+        yoast_head:
+          type: string
+        yoast_head_json:
+          type: object
+        _links:
+          type: object
+    Error:
+      type: object
+      description: 'The WordPress REST error envelope. NOTE: this is NOT RFC 9457 problem+json - the media type is application/json and the shape is {code, message, data}.'
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable WordPress error code, e.g. rest_post_invalid_id, rest_invalid_param, rest_no_route.
+          examples:
+          - rest_post_invalid_id
+        message:
+          type: string
+          description: Human-readable error message.
+          examples:
+          - Invalid post ID.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code, repeated in the body.
+              examples:
+              - 404
+            params:
+              type: object
+              additionalProperties:
+                type: string
+              description: 'Present on rest_invalid_param: per-parameter validation messages.'
+            details:
+              type: object
+              description: 'Present on rest_invalid_param: per-parameter structured detail.'
   parameters:
     orderby:
       name: orderby
@@ -257,110 +322,6 @@ components:
       description: Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host.
       schema:
         type: string
-  schemas:
-    MediaItem:
-      type: object
-      description: A media library attachment.
-      properties:
-        id:
-          type: integer
-        date:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        slug:
-          type: string
-        type:
-          type: string
-          examples:
-          - attachment
-        link:
-          type: string
-          format: uri
-          description: Attachment page URL on daring.com.
-        title:
-          type: object
-          properties:
-            rendered:
-              type: string
-        author:
-          type: integer
-        caption:
-          type: object
-          properties:
-            rendered:
-              type: string
-        description:
-          type: object
-          properties:
-            rendered:
-              type: string
-        alt_text:
-          type: string
-          description: Alternative text for accessibility. Frequently empty on this host.
-        media_type:
-          type: string
-          examples:
-          - image
-        mime_type:
-          type: string
-          examples:
-          - image/jpeg
-        filename:
-          type: string
-        filesize:
-          type: integer
-          description: Size of the original file in bytes.
-        media_details:
-          type: object
-          description: Width, height, file path, EXIF metadata, and a `sizes` map of every generated variant with its own source_url.
-        source_url:
-          type: string
-          format: uri
-          description: Direct URL of the original uploaded file.
-        post:
-          type:
-          - integer
-          - 'null'
-          description: ID of the object the attachment is attached to.
-        _links:
-          type: object
-    Error:
-      type: object
-      description: 'The WordPress REST error envelope. NOTE: this is NOT RFC 9457 problem+json - the media type is application/json and the shape is {code, message, data}.'
-      required:
-      - code
-      - message
-      - data
-      properties:
-        code:
-          type: string
-          description: Machine-readable WordPress error code, e.g. rest_post_invalid_id, rest_invalid_param, rest_no_route.
-          examples:
-          - rest_post_invalid_id
-        message:
-          type: string
-          description: Human-readable error message.
-          examples:
-          - Invalid post ID.
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: HTTP status code, repeated in the body.
-              examples:
-              - 404
-            params:
-              type: object
-              additionalProperties:
-                type: string
-              description: 'Present on rest_invalid_param: per-parameter validation messages.'
-            details:
-              type: object
-              description: 'Present on rest_invalid_param: per-parameter structured detail.'
   headers:
     LinkPagination:
       description: RFC 8288 Link header carrying `prev` and `next` relations for the collection.

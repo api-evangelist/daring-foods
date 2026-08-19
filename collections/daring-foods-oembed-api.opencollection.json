@@ -1,0 +1,55 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Daring Foods O Embed API",
+    "version": "wp/v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "oEmbed",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Resolve a daring.com URL to oEmbed metadata",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://daring.com/wp-json/oembed/1.0/embed",
+            "params": [
+              {
+                "name": "url",
+                "value": "",
+                "type": "query",
+                "description": "The daring.com URL to embed, percent-encoded."
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Response format. Both values verified live."
+              },
+              {
+                "name": "maxwidth",
+                "value": "",
+                "type": "query",
+                "description": "Maximum width of the embed in pixels."
+              },
+              {
+                "name": "maxheight",
+                "value": "",
+                "type": "query",
+                "description": "Maximum height of the embed in pixels."
+              }
+            ]
+          },
+          "docs": "Returns oEmbed 1.0 metadata for any public daring.com URL. Verified live against a recipe permalink."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

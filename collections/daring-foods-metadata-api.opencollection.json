@@ -1,0 +1,260 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Daring Foods Discovery Metadata API",
+    "version": "wp/v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Metadata",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List registered post types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://daring.com/wp-json/wp/v2/types",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401."
+              }
+            ]
+          },
+          "docs": "Returns every registered post type keyed by slug. Verified live at 14 types, including the site's three custom content collections: products, foodservice-products and recipes."
+        },
+        {
+          "info": {
+            "name": "Retrieve a post type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://daring.com/wp-json/wp/v2/types/:type",
+            "params": [
+              {
+                "name": "type",
+                "value": "",
+                "type": "path",
+                "description": "Post type slug, e.g. recipes."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401."
+              }
+            ]
+          },
+          "docs": "Returns a single registered post type by slug."
+        },
+        {
+          "info": {
+            "name": "List registered taxonomies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://daring.com/wp-json/wp/v2/taxonomies",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to taxonomies associated with a specific post type."
+              }
+            ]
+          },
+          "docs": "Returns every registered taxonomy keyed by slug, with the post types each applies to. Verified live at 4: category, post_tag, nav_menu and wp_pattern_category."
+        },
+        {
+          "info": {
+            "name": "Retrieve a taxonomy",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://daring.com/wp-json/wp/v2/taxonomies/:taxonomy",
+            "params": [
+              {
+                "name": "taxonomy",
+                "value": "",
+                "type": "path",
+                "description": "Taxonomy slug, e.g. category."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401."
+              }
+            ]
+          },
+          "docs": "Returns a single registered taxonomy by slug."
+        },
+        {
+          "info": {
+            "name": "List post statuses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://daring.com/wp-json/wp/v2/statuses",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401."
+              }
+            ]
+          },
+          "docs": "Returns the post statuses visible to the caller. Anonymously this is `publish` only."
+        },
+        {
+          "info": {
+            "name": "Retrieve a post status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://daring.com/wp-json/wp/v2/statuses/:status",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "path",
+                "description": "Status slug, e.g. publish."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401."
+              }
+            ]
+          },
+          "docs": "Returns a single post status by slug."
+        },
+        {
+          "info": {
+            "name": "List authors",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://daring.com/wp-json/wp/v2/users",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Current page of the collection (1-based)."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items returned per page. Verified server cap is 100; a larger value returns HTTP 400 rest_invalid_param."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to those matching a free-text string."
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Sort direction."
+              },
+              {
+                "name": "orderby",
+                "value": "",
+                "type": "query",
+                "description": "Field to sort the collection by."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401."
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Limit result set to specific IDs."
+              },
+              {
+                "name": "exclude",
+                "value": "",
+                "type": "query",
+                "description": "Ensure result set excludes specific IDs."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offset the result set by a specific number of items."
+              },
+              {
+                "name": "_fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host."
+              }
+            ]
+          },
+          "docs": "Returns the site users that have authored published content. Verified live at 3."
+        },
+        {
+          "info": {
+            "name": "Retrieve an author",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://daring.com/wp-json/wp/v2/users/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Unique numeric identifier for the object."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401."
+              },
+              {
+                "name": "_fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host."
+              }
+            ]
+          },
+          "docs": "Returns a single author by numeric ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

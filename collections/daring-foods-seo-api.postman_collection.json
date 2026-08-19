@@ -1,0 +1,160 @@
+{
+  "item": [
+    {
+      "id": "fe4c0384-4d14-4c45-b1f3-a3c85500a416",
+      "name": "SEO",
+      "description": {
+        "content": "Yoast SEO head metadata and JSON-LD.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "86ad1891-cefa-44ea-a814-04aae2a58a94",
+          "name": "Retrieve SEO head metadata for a URL",
+          "request": {
+            "name": "Retrieve SEO head metadata for a URL",
+            "description": {
+              "content": "Returns the Yoast SEO head metadata and schema.org JSON-LD graph for a public daring.com URL. Verified live (HTTP 200) against the site root.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "yoast",
+                "v1",
+                "get_head"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "url",
+                  "value": "<uri>",
+                  "description": "(Required) The daring.com URL to describe, percent-encoded."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8566de98-0085-4b83-b0a3-908385e4c8a9",
+              "name": "SEO head metadata for the requested URL.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "yoast",
+                    "v1",
+                    "get_head"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "url",
+                      "value": "<uri>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"json\": {},\n  \"html\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fd03ce1f-8148-4b65-bed2-d476bfbfe683",
+              "name": "Object not found, or no route matches the request.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "yoast",
+                    "v1",
+                    "get_head"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "url",
+                      "value": "<uri>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"rest_post_invalid_id\",\n  \"message\": \"Invalid post ID.\",\n  \"data\": {\n    \"status\": 404\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://daring.com/wp-json",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "6b7fb0fb-783f-4958-88e9-acd717546506",
+    "name": "Daring Foods Metadata SEO API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "daring.com runs Yoast SEO, which registers a public `yoast/v1` namespace. The `get_head` operation resolves any public daring.com URL to that page's rendered SEO head - canonical URL, title, meta description, Open Graph and Twitter card properties, and the full schema.org JSON-LD `@graph` Yoast generates for it. For an agent this is the most structured description of a Daring recipe or product available from this host, because it carries schema.org typing that the content collections themselves do not; the same JSON-LD is also inlined on every record returned by the products, recipes, pages and posts collections as `yoast_head_json`. The remaining yoast/v1 routes are administrative and return HTTP 401 anonymously.\n\nContact Support:\n Name: Daring Foods",
+      "type": "text/plain"
+    }
+  }
+}

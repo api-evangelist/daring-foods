@@ -1,16 +1,9 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Daring Foods Recipes API
   version: wp/v2
   summary: Public read access to the Daring recipe library, the largest content collection on the site.
-  description: 'Public, unauthenticated read access to the Daring recipe library at https://daring.com/recipes/
-    via the site''s custom `recipes` post type on the WordPress REST API. This is by a wide margin the richest collection
-    Daring Foods exposes: 208 published recipes at time of capture (observed in the X-WP-Total header), each classified
-    by cooking method through the shared `category` taxonomy (Saute 22, Oven Baked 13, Air Fry 7, Microwave 7, Pan
-    Fry 5, Grill Pan 5, Dutch Oven 1, Braise 1). Recipe bodies (ingredients, steps, timings) are stored in Advanced
-    Custom Fields which this host does not expose over REST - the `acf` member is present but empty - so the API
-    returns recipe identity, taxonomy, featured image ID and SEO metadata, and the full recipe must be read from
-    the `link` URL. Daring Foods operates no developer program; this is the content API of its marketing site.'
+  description: 'Public, unauthenticated read access to the Daring recipe library at https://daring.com/recipes/ via the site''s custom `recipes` post type on the WordPress REST API. This is by a wide margin the richest collection Daring Foods exposes: 208 published recipes at time of capture (observed in the X-WP-Total header), each classified by cooking method through the shared `category` taxonomy (Saute 22, Oven Baked 13, Air Fry 7, Microwave 7, Pan Fry 5, Grill Pan 5, Dutch Oven 1, Braise 1). Recipe bodies (ingredients, steps, timings) are stored in Advanced Custom Fields which this host does not expose over REST - the `acf` member is present but empty - so the API returns recipe identity, taxonomy, featured image ID and SEO metadata, and the full recipe must be read from the `link` URL. Daring Foods operates no developer program; this is the content API of its marketing site.'
   contact:
     name: Daring Foods
     url: https://daring.com/faq/
@@ -21,11 +14,7 @@ info:
     method: derived
     source: https://daring.com/wp-json/
     derived_on: '2026-08-04'
-    note: Routes enumerated from the live WordPress route index at https://daring.com/wp-json/ (222 routes across
-      10 namespaces) on 2026-08-04, then probed anonymously one at a time; only routes verified to return HTTP 200
-      without credentials are documented here. Schemas reflect fields observed in the live responses. Write methods
-      exist on the same routes but require WordPress authentication (cookie + X-WP-Nonce, or Application Passwords)
-      and return HTTP 401 anonymously, so they are not documented. No fabricated operations, parameters or fields.
+    note: Routes enumerated from the live WordPress route index at https://daring.com/wp-json/ (222 routes across 10 namespaces) on 2026-08-04, then probed anonymously one at a time; only routes verified to return HTTP 200 without credentials are documented here. Schemas reflect fields observed in the live responses. Write methods exist on the same routes but require WordPress authentication (cookie + X-WP-Nonce, or Application Passwords) and return HTTP 401 anonymously, so they are not documented. No fabricated operations, parameters or fields.
 servers:
 - url: https://daring.com/wp-json
   description: Production
@@ -39,8 +28,7 @@ paths:
       - Recipes
       operationId: listRecipes
       summary: List recipes
-      description: Returns a paginated collection of published recipes. Filter by cooking method with the `categories`
-        parameter using term IDs from /wp/v2/categories. Verified live at 208 recipes.
+      description: Returns a paginated collection of published recipes. Filter by cooking method with the `categories` parameter using term IDs from /wp/v2/categories. Verified live at 208 recipes.
       parameters:
       - $ref: '#/components/parameters/page'
       - $ref: '#/components/parameters/perPage'
@@ -172,6 +160,14 @@ paths:
                   status: 404
 components:
   parameters:
+    slugFilter:
+      name: slug
+      in: query
+      description: Limit results to items with one of the given slugs.
+      schema:
+        type: array
+        items:
+          type: string
     page:
       name: page
       in: query
@@ -183,29 +179,20 @@ components:
     perPage:
       name: per_page
       in: query
-      description: Maximum number of items returned per page. Verified server cap is 100; a larger value returns
-        HTTP 400 rest_invalid_param.
+      description: Maximum number of items returned per page. Verified server cap is 100; a larger value returns HTTP 400 rest_invalid_param.
       schema:
         type: integer
         minimum: 1
         maximum: 100
         default: 10
-    search:
-      name: search
+    include:
+      name: include
       in: query
-      description: Limit results to those matching a free-text string.
+      description: Limit result set to specific IDs.
       schema:
-        type: string
-    order:
-      name: order
-      in: query
-      description: Sort direction.
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
-        default: desc
+        type: array
+        items:
+          type: integer
     orderby:
       name: orderby
       in: query
@@ -224,43 +211,13 @@ components:
     context:
       name: context
       in: query
-      description: Scope under which the request is made; determines the fields present in the response. Anonymous
-        callers may use `view` and `embed` only - `edit` returns HTTP 401.
+      description: Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401.
       schema:
         type: string
         enum:
         - view
         - embed
         default: view
-    fields:
-      name: _fields
-      in: query
-      description: Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress
-        core response-shaping convention, verified working on this host.
-      schema:
-        type: string
-    embed:
-      name: _embed
-      in: query
-      description: Inline embeddable linked resources (featured media, terms, author) into an `_embedded` object.
-      schema:
-        type: boolean
-    slugFilter:
-      name: slug
-      in: query
-      description: Limit results to items with one of the given slugs.
-      schema:
-        type: array
-        items:
-          type: string
-    include:
-      name: include
-      in: query
-      description: Limit result set to specific IDs.
-      schema:
-        type: array
-        items:
-          type: integer
     exclude:
       name: exclude
       in: query
@@ -269,13 +226,6 @@ components:
         type: array
         items:
           type: integer
-    offset:
-      name: offset
-      in: query
-      description: Offset the result set by a specific number of items.
-      schema:
-        type: integer
-        minimum: 0
     idPath:
       name: id
       in: path
@@ -283,29 +233,45 @@ components:
       description: Unique numeric identifier for the object.
       schema:
         type: integer
-  headers:
-    XWPTotal:
-      description: Total number of items in the unpaginated collection.
-      schema:
-        type: integer
-    XWPTotalPages:
-      description: Total number of pages available at the requested per_page size.
-      schema:
-        type: integer
-    LinkPagination:
-      description: RFC 8288 Link header carrying `prev` and `next` relations for the collection.
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a free-text string.
       schema:
         type: string
-    CacheControl:
-      description: 'Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable:
-        SHORT).'
+    fields:
+      name: _fields
+      in: query
+      description: Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host.
       schema:
         type: string
+    offset:
+      name: offset
+      in: query
+      description: Offset the result set by a specific number of items.
+      schema:
+        type: integer
+        minimum: 0
+    order:
+      name: order
+      in: query
+      description: Sort direction.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: desc
+    embed:
+      name: _embed
+      in: query
+      description: Inline embeddable linked resources (featured media, terms, author) into an `_embedded` object.
+      schema:
+        type: boolean
   schemas:
     Error:
       type: object
-      description: 'The WordPress REST error envelope. NOTE: this is NOT RFC 9457 problem+json - the media type
-        is application/json and the shape is {code, message, data}.'
+      description: 'The WordPress REST error envelope. NOTE: this is NOT RFC 9457 problem+json - the media type is application/json and the shape is {code, message, data}.'
       required:
       - code
       - message
@@ -390,8 +356,7 @@ components:
           properties:
             rendered:
               type: string
-          description: 'Item title. NOTE: HTML entities are escaped in the rendered value (e.g. `Buffalo Mac &#038;
-            Cheese`).'
+          description: 'Item title. NOTE: HTML entities are escaped in the rendered value (e.g. `Buffalo Mac &#038; Cheese`).'
         featured_media:
           type: integer
           description: Media library ID of the featured image; 0 when unset. Resolve via /wp/v2/media/{id} or `_embed`.
@@ -404,9 +369,7 @@ components:
             type: string
           description: CSS class names WordPress generates for the item.
         acf:
-          description: Advanced Custom Fields payload. Observed EMPTY (`[]`) on this host - the site runs ACF but
-            does not expose field values over REST, so nutrition, ingredient and recipe-step data are NOT available
-            through this API.
+          description: Advanced Custom Fields payload. Observed EMPTY (`[]`) on this host - the site runs ACF but does not expose field values over REST, so nutrition, ingredient and recipe-step data are NOT available through this API.
           type:
           - array
           - object
@@ -423,5 +386,21 @@ components:
           type: array
           items:
             type: integer
-          description: IDs of `category` terms assigned to the recipe - on this site the cooking-method taxonomy.
-            Resolve via /wp/v2/categories/{id}.
+          description: IDs of `category` terms assigned to the recipe - on this site the cooking-method taxonomy. Resolve via /wp/v2/categories/{id}.
+  headers:
+    XWPTotal:
+      description: Total number of items in the unpaginated collection.
+      schema:
+        type: integer
+    CacheControl:
+      description: 'Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable: SHORT).'
+      schema:
+        type: string
+    LinkPagination:
+      description: RFC 8288 Link header carrying `prev` and `next` relations for the collection.
+      schema:
+        type: string
+    XWPTotalPages:
+      description: Total number of pages available at the requested per_page size.
+      schema:
+        type: integer

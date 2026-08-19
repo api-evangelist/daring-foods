@@ -1,0 +1,214 @@
+{
+  "item": [
+    {
+      "id": "8d47d520-471e-4c82-bb43-d9b4823392be",
+      "name": "Discovery",
+      "description": {
+        "content": "Route index and site identity.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "9a56a760-6870-403a-ac2c-32d3589eea94",
+          "name": "Retrieve the API route index",
+          "request": {
+            "name": "Retrieve the API route index",
+            "description": {
+              "content": "Returns site identity, registered namespaces, the advertised authentication mechanism and the complete route index. This is the entry point for discovering the whole surface.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "_fields",
+                  "value": "<string>",
+                  "description": "Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host."
+                },
+                {
+                  "disabled": false,
+                  "key": "namespace",
+                  "value": "<string>",
+                  "description": "Limit the index to a single namespace, e.g. `wp/v2`."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b95b40f9-1cca-4321-9210-c416faf41439",
+              "name": "The route index.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "_fields",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "namespace",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable: SHORT).",
+                  "key": "Cache-Control",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"Daring Foods Plant Chicken | Chicken Better. Chicken On.\",\n  \"description\": \"\",\n  \"url\": \"https://daring.com\",\n  \"home\": \"https://daring.com\",\n  \"namespaces\": [\n    \"oembed/1.0\",\n    \"wpe/cache-plugin/v1\",\n    \"wpe_sign_on_plugin/v1\",\n    \"redirection/v1\",\n    \"yoast/v1\",\n    \"genesisblocks/v1\"\n  ],\n  \"authentication\": {\n    \"application-passwords\": {\n      \"endpoints\": {\n        \"authorization\": \"https://daring.com/wp-admin/authorize-application.php\"\n      }\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "564d8b2b-b2b9-4811-be4d-674f4e34007a",
+          "name": "Retrieve the wp/v2 namespace index",
+          "request": {
+            "name": "Retrieve the wp/v2 namespace index",
+            "description": {
+              "content": "Returns the route index scoped to the `wp/v2` namespace, including the full argument schema for every route - the closest thing this host publishes to a machine-readable parameter contract.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "wp",
+                "v2"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "context",
+                  "value": "view",
+                  "description": "Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "075380af-8bed-4c54-be9a-9259aee5d377",
+              "name": "The wp/v2 namespace index.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "wp",
+                    "v2"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "context",
+                      "value": "view"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"url\": \"https://dqrAjFrpcUEqzFngNu.bxjlGZJF+aTDUi2w7to9WrWxpjKQ7VuFx++3wBRyHCyeIIu94.GjCucSE4niU17E7Sw8Trn2zp\",\n  \"home\": \"https://kXampPJ.bekcd.AuuuQSK,ciUTKB8r-t\",\n  \"gmt_offset\": 8177.812670861906,\n  \"site_icon_url\": \"https://akGFSsmMRnIqhBwdWXMOLfyDJwMOVOi.rzakgtu4BS4UMNbsjsw0ZvMbXmnhb.p-JLVeCfpoBkon.,y4YWZTuiCOXP.\",\n  \"namespaces\": [\n    \"string\",\n    \"string\"\n  ],\n  \"authentication\": {},\n  \"routes\": {},\n  \"_links\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://daring.com/wp-json",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "5158c436-4265-4c4c-81bb-d2b9a2e6ef71",
+    "name": "Daring Foods Discovery API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The metadata layer that makes the whole daring.com surface machine-readable without prior knowledge. `GET /` returns the site identity, the list of registered namespaces (10 on this host) and the full route index (222 routes), along with the `authentication` block advertising WordPress Application Passwords as the credential mechanism for the write side. `/wp/v2/types` enumerates every registered post type - which is how the site's three custom collections (`products`, `foodservice-products`, `recipes`) are discovered - and `/wp/v2/taxonomies` maps each taxonomy to the types it applies to. `/wp/v2/statuses` and `/wp/v2/users` complete the picture. Note that `/wp/v2/settings` requires authentication and returns HTTP 401 anonymously, so it is deliberately not documented here.\n\nContact Support:\n Name: Daring Foods",
+      "type": "text/plain"
+    }
+  }
+}

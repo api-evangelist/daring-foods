@@ -1,0 +1,62 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Daring Foods Discovery API",
+    "version": "wp/v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Discovery",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve the API route index",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://daring.com/wp-json/",
+            "params": [
+              {
+                "name": "_fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host."
+              },
+              {
+                "name": "namespace",
+                "value": "",
+                "type": "query",
+                "description": "Limit the index to a single namespace, e.g. `wp/v2`."
+              }
+            ]
+          },
+          "docs": "Returns site identity, registered namespaces, the advertised authentication mechanism and the complete route index. This is the entry point for discovering the whole surface."
+        },
+        {
+          "info": {
+            "name": "Retrieve the wp/v2 namespace index",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://daring.com/wp-json/wp/v2",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401."
+              }
+            ]
+          },
+          "docs": "Returns the route index scoped to the `wp/v2` namespace, including the full argument schema for every route - the closest thing this host publishes to a machine-readable parameter contract."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
