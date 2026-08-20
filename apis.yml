@@ -41,6 +41,17 @@ tags:
 - Company
 - Food
 - Consumer Packaged Goods
+- Plant-Based
+- Alternative Protein
+- Food and Beverage
+- Recipes
+- Food Service
+- Grocery
+- Content
+tags_raw:
+- Company
+- Food
+- Consumer Packaged Goods
 - Plant Based
 - Alternative Protein
 - Food and Beverage
@@ -88,6 +99,9 @@ apis:
   humanURL: https://daring.com/products/
   baseURL: https://daring.com/wp-json
   tags:
+  - Product
+  - Content
+  tags_raw:
   - Products
   - Content
   properties:
@@ -116,6 +130,10 @@ apis:
   humanURL: https://daring.com/foodservice/products/
   baseURL: https://daring.com/wp-json
   tags:
+  - Food Service
+  - Product
+  - Content
+  tags_raw:
   - Foodservice
   - Products
   - Content
