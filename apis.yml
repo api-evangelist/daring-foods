@@ -16,6 +16,18 @@ description: >-
   method, 14 retail products, 7 foodservice products, 17 marketing pages and a 749-item media
   library - captured here for discovery purposes.
 url: https://raw.githubusercontent.com/api-evangelist/daring-foods/refs/heads/main/apis.yml
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://daring.com/wp-content/uploads/2023/06/cropped-favicon-6oi8ii-5-192x192.png
 accessModel:
   pricing: none
