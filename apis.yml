@@ -428,6 +428,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/daring-foods-capability-edges.yml
+  name: Daring Foods Business Capability Map
 - type: DomainSecurity
   url: security/daring-foods-domain-security.yml
 - type: AgenticAccess

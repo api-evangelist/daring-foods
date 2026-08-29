@@ -1,0 +1,25 @@
+slug: daring-foods
+provider: Daring Foods
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Agriculture & Food Production
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 1
+edges:
+- tag: SEO
+  spec_file: daring-foods-seo-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.78
+  evidence: '"daring.com runs Yoast SEO" ... "getSeoHead  Retrieve SEO head metadata for a URL" — "canonical
+    URL, title, meta description, Open Graph and Twitter card properties"'
+  reason: Surface is explicitly SEO and social-sharing metadata for web pages, which is squarely web/SEO
+    digital marketing. Slight discount because it could also be read as pure site-technical metadata retrieval.
