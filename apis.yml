@@ -297,28 +297,6 @@ apis:
     url: conventions/daring-foods-conventions.yml
   - type: Conformance
     url: conformance/daring-foods-conformance.yml
-- aid: daring-foods:daring-foods-oembed-api
-  name: Daring Foods oEmbed API
-  description: >-
-    Public oEmbed 1.0 provider endpoint for daring.com URLs, returning embeddable rich metadata - title,
-    author, thumbnail and iframe markup - for any recipe, product or marketing page in a single unauthenticated
-    call. Answers in both JSON and XML.
-  humanURL: https://daring.com/
-  baseURL: https://daring.com/wp-json
-  tags:
-  - oEmbed
-  - Metadata
-  properties:
-  - type: OpenAPI
-    url: openapi/daring-foods-oembed-api-openapi.yml
-  - type: Overlay
-    url: overlays/daring-foods-oembed-api-overlay.yaml
-  - type: Authentication
-    url: authentication/daring-foods-authentication.yml
-  - type: ErrorCatalog
-    url: errors/daring-foods-problem-types.yml
-  - type: Conformance
-    url: conformance/daring-foods-conformance.yml
 - aid: daring-foods:daring-foods-seo-api
   name: Daring Foods SEO Metadata API
   description: >-
@@ -422,12 +400,30 @@ apis:
     url: conformance/daring-foods-conformance.yml
   - type: Lifecycle
     url: lifecycle/daring-foods-lifecycle.yml
+- aid: daring-foods:daring-foods-o-embed-api
+  name: Daring Foods o Embed API
+  description: oEmbed 1.0 provider endpoint.
+  humanURL: https://daring.com/recipes/
+  baseURL: https://daring.com/wp-json
+  tags:
+  - o Embed
+  properties:
+  - type: OpenAPI
+    url: openapi/daring-foods-o-embed-api-openapi.yml
+  - type: Authentication
+    url: authentication/daring-foods-authentication.yml
+  - type: ErrorCatalog
+    url: errors/daring-foods-problem-types.yml
+  - type: Conformance
+    url: conformance/daring-foods-conformance.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/daring-foods-oembed-api-overlay.yaml
 - type: CapabilityMap
   url: capabilities/daring-foods-capability-edges.yml
   name: Daring Foods Business Capability Map
