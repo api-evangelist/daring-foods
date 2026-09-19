@@ -406,6 +406,8 @@ apis:
   humanURL: https://daring.com/recipes/
   baseURL: https://daring.com/wp-json
   tags:
+  - oEmbed
+  tags_raw:
   - o Embed
   properties:
   - type: OpenAPI
