@@ -3,7 +3,7 @@ info:
   title: Daring Foods Taxonomy Tags API
   version: wp/v2
   summary: Public read access to the cooking-method taxonomy that classifies the recipe library.
-  description: 'Public, unauthenticated read access to the term taxonomies on daring.com. The `category` taxonomy is the functional one and is shared between the `post` and `recipes` types: on this site its 9 terms are cooking methods, not editorial subjects - Saute (22 recipes), Oven Baked (13), Air Fry (7), Microwave (7), Pan Fry (5), Grill Pan (5), Dutch Oven (1), Braise (1) and the WordPress default Uncategorized (4). Combined with the `categories` filter on /wp/v2/recipes this is what makes the recipe library queryable by how the dish is cooked. The `post_tag` taxonomy is registered but empty (0 terms), which the tags operations below report faithfully rather than omit.'
+  description: Public, unauthenticated read access to the term taxonomies on daring.com.
   contact:
     name: Daring Foods
     url: https://daring.com/faq/
@@ -115,21 +115,42 @@ paths:
                   status: 404
 components:
   parameters:
-    orderby:
-      name: orderby
+    idPath:
+      name: id
+      in: path
+      required: true
+      description: Unique numeric identifier for the object.
+      schema:
+        type: integer
+    fields:
+      name: _fields
       in: query
-      description: Field to sort the collection by.
+      description: Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host.
       schema:
         type: string
-        enum:
-        - date
-        - id
-        - include
-        - modified
-        - relevance
-        - slug
-        - title
-        default: date
+    perPage:
+      name: per_page
+      in: query
+      description: Maximum number of items returned per page. Verified server cap is 100; a larger value returns HTTP 400 rest_invalid_param.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    exclude:
+      name: exclude
+      in: query
+      description: Ensure result set excludes specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a free-text string.
+      schema:
+        type: string
     offset:
       name: offset
       in: query
@@ -147,6 +168,22 @@ components:
         - view
         - embed
         default: view
+    page:
+      name: page
+      in: query
+      description: Current page of the collection (1-based).
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    include:
+      name: include
+      in: query
+      description: Limit result set to specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
     order:
       name: order
       in: query
@@ -165,59 +202,26 @@ components:
         type: array
         items:
           type: string
-    page:
-      name: page
+    orderby:
+      name: orderby
       in: query
-      description: Current page of the collection (1-based).
-      schema:
-        type: integer
-        minimum: 1
-        default: 1
-    exclude:
-      name: exclude
-      in: query
-      description: Ensure result set excludes specific IDs.
-      schema:
-        type: array
-        items:
-          type: integer
-    idPath:
-      name: id
-      in: path
-      required: true
-      description: Unique numeric identifier for the object.
-      schema:
-        type: integer
-    perPage:
-      name: per_page
-      in: query
-      description: Maximum number of items returned per page. Verified server cap is 100; a larger value returns HTTP 400 rest_invalid_param.
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: 10
-    include:
-      name: include
-      in: query
-      description: Limit result set to specific IDs.
-      schema:
-        type: array
-        items:
-          type: integer
-    search:
-      name: search
-      in: query
-      description: Limit results to those matching a free-text string.
+      description: Field to sort the collection by.
       schema:
         type: string
-    fields:
-      name: _fields
-      in: query
-      description: Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host.
-      schema:
-        type: string
+        enum:
+        - date
+        - id
+        - include
+        - modified
+        - relevance
+        - slug
+        - title
+        default: date
   headers:
+    CacheControl:
+      description: 'Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable: SHORT).'
+      schema:
+        type: string
     LinkPagination:
       description: RFC 8288 Link header carrying `prev` and `next` relations for the collection.
       schema:
@@ -230,45 +234,7 @@ components:
       description: Total number of pages available at the requested per_page size.
       schema:
         type: integer
-    CacheControl:
-      description: 'Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable: SHORT).'
-      schema:
-        type: string
   schemas:
-    Error:
-      type: object
-      description: 'The WordPress REST error envelope. NOTE: this is NOT RFC 9457 problem+json - the media type is application/json and the shape is {code, message, data}.'
-      required:
-      - code
-      - message
-      - data
-      properties:
-        code:
-          type: string
-          description: Machine-readable WordPress error code, e.g. rest_post_invalid_id, rest_invalid_param, rest_no_route.
-          examples:
-          - rest_post_invalid_id
-        message:
-          type: string
-          description: Human-readable error message.
-          examples:
-          - Invalid post ID.
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: HTTP status code, repeated in the body.
-              examples:
-              - 404
-            params:
-              type: object
-              additionalProperties:
-                type: string
-              description: 'Present on rest_invalid_param: per-parameter validation messages.'
-            details:
-              type: object
-              description: 'Present on rest_invalid_param: per-parameter structured detail.'
     Tag:
       type: object
       description: A taxonomy term.
@@ -314,3 +280,37 @@ components:
           type: object
         _links:
           type: object
+    Error:
+      type: object
+      description: 'The WordPress REST error envelope. NOTE: this is NOT RFC 9457 problem+json - the media type is application/json and the shape is {code, message, data}.'
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable WordPress error code, e.g. rest_post_invalid_id, rest_invalid_param, rest_no_route.
+          examples:
+          - rest_post_invalid_id
+        message:
+          type: string
+          description: Human-readable error message.
+          examples:
+          - Invalid post ID.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code, repeated in the body.
+              examples:
+              - 404
+            params:
+              type: object
+              additionalProperties:
+                type: string
+              description: 'Present on rest_invalid_param: per-parameter validation messages.'
+            details:
+              type: object
+              description: 'Present on rest_invalid_param: per-parameter structured detail.'

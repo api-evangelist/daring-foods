@@ -3,7 +3,7 @@ info:
   title: Daring Foods Metadata SEO API
   version: wp/v2
   summary: Yoast SEO head metadata and schema.org JSON-LD graph for any daring.com URL.
-  description: daring.com runs Yoast SEO, which registers a public `yoast/v1` namespace. The `get_head` operation resolves any public daring.com URL to that page's rendered SEO head - canonical URL, title, meta description, Open Graph and Twitter card properties, and the full schema.org JSON-LD `@graph` Yoast generates for it. For an agent this is the most structured description of a Daring recipe or product available from this host, because it carries schema.org typing that the content collections themselves do not; the same JSON-LD is also inlined on every record returned by the products, recipes, pages and posts collections as `yoast_head_json`. The remaining yoast/v1 routes are administrative and return HTTP 401 anonymously.
+  description: daring.com runs Yoast SEO, which registers a public `yoast/v1` namespace.
   contact:
     name: Daring Foods
     url: https://daring.com/faq/

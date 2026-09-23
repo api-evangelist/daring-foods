@@ -1,56 +1,59 @@
 {
   "provider": "daring-foods",
   "sources": [
-    "daring-foods-categories-api-openapi.yml",
+    "_original/daring-foods-taxonomy-api-openapi.yml",
     "daring-foods-comments-api-openapi.yml",
     "daring-foods-discovery-api-openapi.yml",
     "daring-foods-foodservice-api-openapi.yml",
     "daring-foods-media-api-openapi.yml",
     "daring-foods-metadata-api-openapi.yml",
-    "daring-foods-oembed-api-openapi.yml",
+    "daring-foods-o-embed-api-openapi.yml",
     "daring-foods-pages-api-openapi.yml",
     "daring-foods-posts-api-openapi.yml",
     "daring-foods-products-api-openapi.yml",
     "daring-foods-recipes-api-openapi.yml",
     "daring-foods-search-api-openapi.yml",
-    "daring-foods-seo-api-openapi.yml",
-    "daring-foods-tags-api-openapi.yml"
+    "daring-foods-seo-api-openapi.yml"
   ],
   "outputs": [
     "daring-foods-categories-api-openapi.yml",
+    "daring-foods-tags-api-openapi.yml",
     "daring-foods-comments-api-openapi.yml",
     "daring-foods-discovery-api-openapi.yml",
     "daring-foods-foodservice-api-openapi.yml",
     "daring-foods-media-api-openapi.yml",
     "daring-foods-metadata-api-openapi.yml",
-    "daring-foods-oembed-api-openapi.yml",
+    "daring-foods-o-embed-api-openapi.yml",
     "daring-foods-pages-api-openapi.yml",
     "daring-foods-posts-api-openapi.yml",
     "daring-foods-products-api-openapi.yml",
     "daring-foods-recipes-api-openapi.yml",
     "daring-foods-search-api-openapi.yml",
-    "daring-foods-seo-api-openapi.yml",
-    "daring-foods-tags-api-openapi.yml"
+    "daring-foods-seo-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
-  "warnings": [],
+  "warnings": [
+    "daring-foods-comments-api-openapi.yml: previously refined output kept for 2 operation(s) no archived document covers (e.g. /wp/v2/comments get, /wp/v2/comments/{id} get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "daring-foods-discovery-api-openapi.yml: previously refined output kept for 2 operation(s) no archived document covers (e.g. / get, /wp/v2 get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "daring-foods-foodservice-api-openapi.yml: previously refined output kept for 2 operation(s) no archived document covers (e.g. /wp/v2/foodservice-products get, /wp/v2/foodservice-products/{id} get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "daring-foods-media-api-openapi.yml: previously refined output kept for 2 operation(s) no archived document covers (e.g. /wp/v2/media get, /wp/v2/media/{id} get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "daring-foods-metadata-api-openapi.yml: previously refined output kept for 8 operation(s) no archived document covers (e.g. /wp/v2/statuses get, /wp/v2/statuses/{status} get, /wp/v2/taxonomies get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "daring-foods-o-embed-api-openapi.yml: previously refined output kept for 1 operation(s) no archived document covers (e.g. /oembed/1.0/embed get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "daring-foods-pages-api-openapi.yml: previously refined output kept for 2 operation(s) no archived document covers (e.g. /wp/v2/pages get, /wp/v2/pages/{id} get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "daring-foods-posts-api-openapi.yml: previously refined output kept for 2 operation(s) no archived document covers (e.g. /wp/v2/posts get, /wp/v2/posts/{id} get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "daring-foods-products-api-openapi.yml: previously refined output kept for 2 operation(s) no archived document covers (e.g. /wp/v2/products get, /wp/v2/products/{id} get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "daring-foods-recipes-api-openapi.yml: previously refined output kept for 2 operation(s) no archived document covers (e.g. /wp/v2/recipes get, /wp/v2/recipes/{id} get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "daring-foods-search-api-openapi.yml: previously refined output kept for 1 operation(s) no archived document covers (e.g. /wp/v2/search get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "daring-foods-seo-api-openapi.yml: previously refined output kept for 1 operation(s) no archived document covers (e.g. /yoast/v1/get_head get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth."
+  ],
   "notes": [
-    "daring-foods-categories-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "daring-foods-comments-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "daring-foods-discovery-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "daring-foods-foodservice-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "daring-foods-media-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "daring-foods-metadata-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "daring-foods-oembed-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "daring-foods-pages-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "daring-foods-posts-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "daring-foods-products-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "daring-foods-recipes-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "daring-foods-search-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "daring-foods-seo-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "daring-foods-tags-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "daring-foods-taxonomy-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
     "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "daring-foods-categories-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "daring-foods-tags-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

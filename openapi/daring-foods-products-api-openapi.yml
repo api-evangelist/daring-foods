@@ -3,7 +3,7 @@ info:
   title: Daring Foods Retail Products API
   version: wp/v2
   summary: Public read access to the Daring retail plant-chicken product catalog.
-  description: 'Daring Foods publishes daring.com on WordPress (WP Engine) with the core WordPress REST API enabled and anonymously readable. This document covers the site''s custom `products` post type, which backs the retail product catalog at https://daring.com/products/ - Original Shredded and Diced Plant Chicken, the Plant Chicken Bowl line, Plant Chicken Wings, and the Cajun/Teriyaki/Original Pieces. At time of capture the collection held 14 published products (observed in the X-WP-Total response header). This is NOT a commerce, inventory or ordering API and Daring Foods operates no developer program - it is the content API behind the marketing site, captured for discovery purposes. Product attribute data (nutrition, ingredients, retail availability) is held in Advanced Custom Fields which this host does NOT expose over REST: the `acf` member is present but empty, so only title, slug, link, dates, featured image ID and SEO metadata are retrievable.'
+  description: Daring Foods publishes daring.com on WordPress (WP Engine) with the core WordPress REST API enabled and anonymously readable.
   contact:
     name: Daring Foods
     url: https://daring.com/faq/
@@ -129,15 +129,37 @@ paths:
                 data:
                   status: 404
 components:
-  parameters:
-    slugFilter:
-      name: slug
-      in: query
-      description: Limit results to items with one of the given slugs.
+  headers:
+    CacheControl:
+      description: 'Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable: SHORT).'
       schema:
-        type: array
-        items:
-          type: string
+        type: string
+    LinkPagination:
+      description: RFC 8288 Link header carrying `prev` and `next` relations for the collection.
+      schema:
+        type: string
+    XWPTotal:
+      description: Total number of items in the unpaginated collection.
+      schema:
+        type: integer
+    XWPTotalPages:
+      description: Total number of pages available at the requested per_page size.
+      schema:
+        type: integer
+  parameters:
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a free-text string.
+      schema:
+        type: string
+    offset:
+      name: offset
+      in: query
+      description: Offset the result set by a specific number of items.
+      schema:
+        type: integer
+        minimum: 0
     page:
       name: page
       in: query
@@ -146,15 +168,6 @@ components:
         type: integer
         minimum: 1
         default: 1
-    perPage:
-      name: per_page
-      in: query
-      description: Maximum number of items returned per page. Verified server cap is 100; a larger value returns HTTP 400 rest_invalid_param.
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: 10
     include:
       name: include
       in: query
@@ -163,21 +176,33 @@ components:
         type: array
         items:
           type: integer
-    orderby:
-      name: orderby
+    slugFilter:
+      name: slug
       in: query
-      description: Field to sort the collection by.
+      description: Limit results to items with one of the given slugs.
+      schema:
+        type: array
+        items:
+          type: string
+    embed:
+      name: _embed
+      in: query
+      description: Inline embeddable linked resources (featured media, terms, author) into an `_embedded` object.
+      schema:
+        type: boolean
+    fields:
+      name: _fields
+      in: query
+      description: Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host.
       schema:
         type: string
-        enum:
-        - date
-        - id
-        - include
-        - modified
-        - relevance
-        - slug
-        - title
-        default: date
+    idPath:
+      name: id
+      in: path
+      required: true
+      description: Unique numeric identifier for the object.
+      schema:
+        type: integer
     context:
       name: context
       in: query
@@ -196,32 +221,15 @@ components:
         type: array
         items:
           type: integer
-    idPath:
-      name: id
-      in: path
-      required: true
-      description: Unique numeric identifier for the object.
+    perPage:
+      name: per_page
+      in: query
+      description: Maximum number of items returned per page. Verified server cap is 100; a larger value returns HTTP 400 rest_invalid_param.
       schema:
         type: integer
-    search:
-      name: search
-      in: query
-      description: Limit results to those matching a free-text string.
-      schema:
-        type: string
-    fields:
-      name: _fields
-      in: query
-      description: Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host.
-      schema:
-        type: string
-    offset:
-      name: offset
-      in: query
-      description: Offset the result set by a specific number of items.
-      schema:
-        type: integer
-        minimum: 0
+        minimum: 1
+        maximum: 100
+        default: 10
     order:
       name: order
       in: query
@@ -232,47 +240,22 @@ components:
         - asc
         - desc
         default: desc
-    embed:
-      name: _embed
+    orderby:
+      name: orderby
       in: query
-      description: Inline embeddable linked resources (featured media, terms, author) into an `_embedded` object.
+      description: Field to sort the collection by.
       schema:
-        type: boolean
+        type: string
+        enum:
+        - date
+        - id
+        - include
+        - modified
+        - relevance
+        - slug
+        - title
+        default: date
   schemas:
-    Error:
-      type: object
-      description: 'The WordPress REST error envelope. NOTE: this is NOT RFC 9457 problem+json - the media type is application/json and the shape is {code, message, data}.'
-      required:
-      - code
-      - message
-      - data
-      properties:
-        code:
-          type: string
-          description: Machine-readable WordPress error code, e.g. rest_post_invalid_id, rest_invalid_param, rest_no_route.
-          examples:
-          - rest_post_invalid_id
-        message:
-          type: string
-          description: Human-readable error message.
-          examples:
-          - Invalid post ID.
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: HTTP status code, repeated in the body.
-              examples:
-              - 404
-            params:
-              type: object
-              additionalProperties:
-                type: string
-              description: 'Present on rest_invalid_param: per-parameter validation messages.'
-            details:
-              type: object
-              description: 'Present on rest_invalid_param: per-parameter structured detail.'
     Product:
       type: object
       description: A Daring retail product entry (custom post type `products`).
@@ -352,20 +335,37 @@ components:
         _links:
           type: object
           description: HAL-style link relations (self, collection, about, wp:featuredmedia, curies).
-  headers:
-    XWPTotal:
-      description: Total number of items in the unpaginated collection.
-      schema:
-        type: integer
-    CacheControl:
-      description: 'Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable: SHORT).'
-      schema:
-        type: string
-    LinkPagination:
-      description: RFC 8288 Link header carrying `prev` and `next` relations for the collection.
-      schema:
-        type: string
-    XWPTotalPages:
-      description: Total number of pages available at the requested per_page size.
-      schema:
-        type: integer
+    Error:
+      type: object
+      description: 'The WordPress REST error envelope. NOTE: this is NOT RFC 9457 problem+json - the media type is application/json and the shape is {code, message, data}.'
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable WordPress error code, e.g. rest_post_invalid_id, rest_invalid_param, rest_no_route.
+          examples:
+          - rest_post_invalid_id
+        message:
+          type: string
+          description: Human-readable error message.
+          examples:
+          - Invalid post ID.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code, repeated in the body.
+              examples:
+              - 404
+            params:
+              type: object
+              additionalProperties:
+                type: string
+              description: 'Present on rest_invalid_param: per-parameter validation messages.'
+            details:
+              type: object
+              description: 'Present on rest_invalid_param: per-parameter structured detail.'

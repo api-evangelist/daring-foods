@@ -1,9 +1,9 @@
 openapi: 3.2.0
 info:
-  title: Daring Foods O Embed API
+  title: Daring Foods o Embed API
   version: wp/v2
   summary: oEmbed 1.0 provider endpoint for daring.com URLs.
-  description: 'daring.com is a registered oEmbed 1.0 provider: any public daring.com URL - a recipe, a product page, a marketing page - can be resolved to embeddable rich metadata (title, author, thumbnail, and an iframe `html` payload) in a single unauthenticated call. The endpoint is advertised in the site''s HTML head via `application/json+oembed` and `text/xml+oembed` link relations, and it answers in both JSON and XML. This is the lowest-friction way to get a titled, illustrated card for a Daring recipe without touching the content collections. The related /oembed/1.0/proxy route requires authentication (verified HTTP 401 anonymously) and is not documented here.'
+  description: 'daring.com is a registered oEmbed 1.0 provider: any public daring.com URL - a recipe, a product page, a marketing page - can be resolved to embeddable rich metadata (title, author, thumbnail, and an iframe `html` payload) in a single unauthenticated call.'
   contact:
     name: Daring Foods
     url: https://daring.com/faq/
@@ -19,13 +19,13 @@ servers:
 - url: https://daring.com/wp-json
   description: Production
 tags:
-- name: oEmbed
+- name: o Embed
   description: oEmbed 1.0 provider endpoint.
 paths:
   /oembed/1.0/embed:
     get:
       tags:
-      - oEmbed
+      - o Embed
       operationId: getOEmbed
       summary: Resolve a daring.com URL to oEmbed metadata
       description: Returns oEmbed 1.0 metadata for any public daring.com URL. Verified live against a recipe permalink.
@@ -94,40 +94,6 @@ paths:
                   status: 404
 components:
   schemas:
-    Error:
-      type: object
-      description: 'The WordPress REST error envelope. NOTE: this is NOT RFC 9457 problem+json - the media type is application/json and the shape is {code, message, data}.'
-      required:
-      - code
-      - message
-      - data
-      properties:
-        code:
-          type: string
-          description: Machine-readable WordPress error code, e.g. rest_post_invalid_id, rest_invalid_param, rest_no_route.
-          examples:
-          - rest_post_invalid_id
-        message:
-          type: string
-          description: Human-readable error message.
-          examples:
-          - Invalid post ID.
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: HTTP status code, repeated in the body.
-              examples:
-              - 404
-            params:
-              type: object
-              additionalProperties:
-                type: string
-              description: 'Present on rest_invalid_param: per-parameter validation messages.'
-            details:
-              type: object
-              description: 'Present on rest_invalid_param: per-parameter structured detail.'
     OEmbedResponse:
       type: object
       description: An oEmbed 1.0 rich response.
@@ -168,3 +134,37 @@ components:
           type: integer
         thumbnail_height:
           type: integer
+    Error:
+      type: object
+      description: 'The WordPress REST error envelope. NOTE: this is NOT RFC 9457 problem+json - the media type is application/json and the shape is {code, message, data}.'
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable WordPress error code, e.g. rest_post_invalid_id, rest_invalid_param, rest_no_route.
+          examples:
+          - rest_post_invalid_id
+        message:
+          type: string
+          description: Human-readable error message.
+          examples:
+          - Invalid post ID.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code, repeated in the body.
+              examples:
+              - 404
+            params:
+              type: object
+              additionalProperties:
+                type: string
+              description: 'Present on rest_invalid_param: per-parameter validation messages.'
+            details:
+              type: object
+              description: 'Present on rest_invalid_param: per-parameter structured detail.'

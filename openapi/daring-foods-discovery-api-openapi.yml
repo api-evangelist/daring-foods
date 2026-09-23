@@ -3,7 +3,7 @@ info:
   title: Daring Foods Discovery API
   version: wp/v2
   summary: The self-describing route index, post-type, taxonomy, status and author metadata.
-  description: The metadata layer that makes the whole daring.com surface machine-readable without prior knowledge. `GET /` returns the site identity, the list of registered namespaces (10 on this host) and the full route index (222 routes), along with the `authentication` block advertising WordPress Application Passwords as the credential mechanism for the write side. `/wp/v2/types` enumerates every registered post type - which is how the site's three custom collections (`products`, `foodservice-products`, `recipes`) are discovered - and `/wp/v2/taxonomies` maps each taxonomy to the types it applies to. `/wp/v2/statuses` and `/wp/v2/users` complete the picture. Note that `/wp/v2/settings` requires authentication and returns HTTP 401 anonymously, so it is deliberately not documented here.
+  description: The metadata layer that makes the whole daring.com surface machine-readable without prior knowledge.
   contact:
     name: Daring Foods
     url: https://daring.com/faq/
@@ -79,6 +79,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/RouteIndex'
 components:
+  parameters:
+    fields:
+      name: _fields
+      in: query
+      description: Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host.
+      schema:
+        type: string
+    context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        default: view
+  headers:
+    CacheControl:
+      description: 'Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable: SHORT).'
+      schema:
+        type: string
   schemas:
     RouteIndex:
       type: object
@@ -115,25 +137,3 @@ components:
           description: Map of route pattern to its supported methods, endpoints and args.
         _links:
           type: object
-  parameters:
-    context:
-      name: context
-      in: query
-      description: Scope under which the request is made; determines the fields present in the response. Anonymous callers may use `view` and `embed` only - `edit` returns HTTP 401.
-      schema:
-        type: string
-        enum:
-        - view
-        - embed
-        default: view
-    fields:
-      name: _fields
-      in: query
-      description: Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host.
-      schema:
-        type: string
-  headers:
-    CacheControl:
-      description: 'Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable: SHORT).'
-      schema:
-        type: string

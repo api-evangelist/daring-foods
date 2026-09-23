@@ -3,7 +3,7 @@ info:
   title: Daring Foods Pages API
   version: wp/v2
   summary: Public read access to the static marketing pages of daring.com.
-  description: 'Public, unauthenticated read access to the 17 static pages that make up daring.com - Home, Products, Our Mission, Ingredients, How To Cook, Locator, FAQ, Careers, Accessibility Statement, Terms & Conditions, VIP, and the Foodservice sub-tree (Foodservice, Products, Mission, How To Cook, Support, Store Locator) - via the WordPress REST API. Unlike the custom post types on this host, pages DO return their full rendered `content` and `excerpt`, which makes this the collection to read when harvesting Daring''s own statements about ingredients, sourcing, sustainability claims and foodservice terms. Pages are hierarchical: the Foodservice sub-pages carry a non-zero `parent`.'
+  description: Public, unauthenticated read access to the 17 static pages that make up daring.com - Home, Products, Our Mission, Ingredients, How To Cook, Locator, FAQ, Careers, Accessibility Statement, Terms & Conditions, VIP, and the Foodservice sub-tree (Foodservice, Products, Mission, How To Cook, Support, Store Locator) - via the WordPress REST API.
   contact:
     name: Daring Foods
     url: https://daring.com/faq/
@@ -143,15 +143,37 @@ paths:
                 data:
                   status: 404
 components:
-  parameters:
-    slugFilter:
-      name: slug
-      in: query
-      description: Limit results to items with one of the given slugs.
+  headers:
+    CacheControl:
+      description: 'Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable: SHORT).'
       schema:
-        type: array
-        items:
-          type: string
+        type: string
+    LinkPagination:
+      description: RFC 8288 Link header carrying `prev` and `next` relations for the collection.
+      schema:
+        type: string
+    XWPTotal:
+      description: Total number of items in the unpaginated collection.
+      schema:
+        type: integer
+    XWPTotalPages:
+      description: Total number of pages available at the requested per_page size.
+      schema:
+        type: integer
+  parameters:
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a free-text string.
+      schema:
+        type: string
+    offset:
+      name: offset
+      in: query
+      description: Offset the result set by a specific number of items.
+      schema:
+        type: integer
+        minimum: 0
     page:
       name: page
       in: query
@@ -160,15 +182,6 @@ components:
         type: integer
         minimum: 1
         default: 1
-    perPage:
-      name: per_page
-      in: query
-      description: Maximum number of items returned per page. Verified server cap is 100; a larger value returns HTTP 400 rest_invalid_param.
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: 10
     include:
       name: include
       in: query
@@ -177,21 +190,33 @@ components:
         type: array
         items:
           type: integer
-    orderby:
-      name: orderby
+    slugFilter:
+      name: slug
       in: query
-      description: Field to sort the collection by.
+      description: Limit results to items with one of the given slugs.
+      schema:
+        type: array
+        items:
+          type: string
+    embed:
+      name: _embed
+      in: query
+      description: Inline embeddable linked resources (featured media, terms, author) into an `_embedded` object.
+      schema:
+        type: boolean
+    fields:
+      name: _fields
+      in: query
+      description: Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host.
       schema:
         type: string
-        enum:
-        - date
-        - id
-        - include
-        - modified
-        - relevance
-        - slug
-        - title
-        default: date
+    idPath:
+      name: id
+      in: path
+      required: true
+      description: Unique numeric identifier for the object.
+      schema:
+        type: integer
     context:
       name: context
       in: query
@@ -210,32 +235,15 @@ components:
         type: array
         items:
           type: integer
-    idPath:
-      name: id
-      in: path
-      required: true
-      description: Unique numeric identifier for the object.
+    perPage:
+      name: per_page
+      in: query
+      description: Maximum number of items returned per page. Verified server cap is 100; a larger value returns HTTP 400 rest_invalid_param.
       schema:
         type: integer
-    search:
-      name: search
-      in: query
-      description: Limit results to those matching a free-text string.
-      schema:
-        type: string
-    fields:
-      name: _fields
-      in: query
-      description: Comma-separated list of fields to limit the response to (e.g. `id,slug,title,link`). A WordPress core response-shaping convention, verified working on this host.
-      schema:
-        type: string
-    offset:
-      name: offset
-      in: query
-      description: Offset the result set by a specific number of items.
-      schema:
-        type: integer
-        minimum: 0
+        minimum: 1
+        maximum: 100
+        default: 10
     order:
       name: order
       in: query
@@ -246,12 +254,21 @@ components:
         - asc
         - desc
         default: desc
-    embed:
-      name: _embed
+    orderby:
+      name: orderby
       in: query
-      description: Inline embeddable linked resources (featured media, terms, author) into an `_embedded` object.
+      description: Field to sort the collection by.
       schema:
-        type: boolean
+        type: string
+        enum:
+        - date
+        - id
+        - include
+        - modified
+        - relevance
+        - slug
+        - title
+        default: date
   schemas:
     Error:
       type: object
@@ -403,20 +420,3 @@ components:
           - string
           - boolean
           - 'null'
-  headers:
-    XWPTotal:
-      description: Total number of items in the unpaginated collection.
-      schema:
-        type: integer
-    CacheControl:
-      description: 'Observed as `max-age=600, must-revalidate` on this host (WP Engine edge cache, x-cacheable: SHORT).'
-      schema:
-        type: string
-    LinkPagination:
-      description: RFC 8288 Link header carrying `prev` and `next` relations for the collection.
-      schema:
-        type: string
-    XWPTotalPages:
-      description: Total number of pages available at the requested per_page size.
-      schema:
-        type: integer
