@@ -12,90 +12,6 @@ artifacts:
   capabilities/daring-foods-capability-edges.yml:
     method: unknown
     evidence: no authorship recorded
-  collections/daring-foods-categories-api.opencollection.json:
-    method: derived
-    evidence: openapi/daring-foods-categories-api
-  collections/daring-foods-categories-api.postman_collection.json:
-    method: derived
-    evidence: openapi/daring-foods-categories-api
-  collections/daring-foods-comments-api.opencollection.json:
-    method: derived
-    evidence: openapi/daring-foods-comments-api
-  collections/daring-foods-comments-api.postman_collection.json:
-    method: derived
-    evidence: openapi/daring-foods-comments-api
-  collections/daring-foods-discovery-api.opencollection.json:
-    method: derived
-    evidence: openapi/daring-foods-discovery-api
-  collections/daring-foods-discovery-api.postman_collection.json:
-    method: derived
-    evidence: openapi/daring-foods-discovery-api
-  collections/daring-foods-foodservice-api.opencollection.json:
-    method: derived
-    evidence: openapi/daring-foods-foodservice-api
-  collections/daring-foods-foodservice-api.postman_collection.json:
-    method: derived
-    evidence: openapi/daring-foods-foodservice-api
-  collections/daring-foods-media-api.opencollection.json:
-    method: derived
-    evidence: openapi/daring-foods-media-api
-  collections/daring-foods-media-api.postman_collection.json:
-    method: derived
-    evidence: openapi/daring-foods-media-api
-  collections/daring-foods-metadata-api.opencollection.json:
-    method: derived
-    evidence: openapi/daring-foods-metadata-api
-  collections/daring-foods-metadata-api.postman_collection.json:
-    method: derived
-    evidence: openapi/daring-foods-metadata-api
-  collections/daring-foods-oembed-api.opencollection.json:
-    method: derived
-    evidence: openapi/daring-foods-oembed-api
-  collections/daring-foods-oembed-api.postman_collection.json:
-    method: derived
-    evidence: openapi/daring-foods-oembed-api
-  collections/daring-foods-pages-api.opencollection.json:
-    method: derived
-    evidence: openapi/daring-foods-pages-api
-  collections/daring-foods-pages-api.postman_collection.json:
-    method: derived
-    evidence: openapi/daring-foods-pages-api
-  collections/daring-foods-posts-api.opencollection.json:
-    method: derived
-    evidence: openapi/daring-foods-posts-api
-  collections/daring-foods-posts-api.postman_collection.json:
-    method: derived
-    evidence: openapi/daring-foods-posts-api
-  collections/daring-foods-products-api.opencollection.json:
-    method: derived
-    evidence: openapi/daring-foods-products-api
-  collections/daring-foods-products-api.postman_collection.json:
-    method: derived
-    evidence: openapi/daring-foods-products-api
-  collections/daring-foods-recipes-api.opencollection.json:
-    method: derived
-    evidence: openapi/daring-foods-recipes-api
-  collections/daring-foods-recipes-api.postman_collection.json:
-    method: derived
-    evidence: openapi/daring-foods-recipes-api
-  collections/daring-foods-search-api.opencollection.json:
-    method: derived
-    evidence: openapi/daring-foods-search-api
-  collections/daring-foods-search-api.postman_collection.json:
-    method: derived
-    evidence: openapi/daring-foods-search-api
-  collections/daring-foods-seo-api.opencollection.json:
-    method: derived
-    evidence: openapi/daring-foods-seo-api
-  collections/daring-foods-seo-api.postman_collection.json:
-    method: derived
-    evidence: openapi/daring-foods-seo-api
-  collections/daring-foods-tags-api.opencollection.json:
-    method: derived
-    evidence: openapi/daring-foods-tags-api
-  collections/daring-foods-tags-api.postman_collection.json:
-    method: derived
-    evidence: openapi/daring-foods-tags-api
   conformance/daring-foods-conformance.yml:
     method: derived
     evidence: declared in the artifact
@@ -111,55 +27,10 @@ artifacts:
   examples/daring-foods-examples.yml:
     method: unknown
     evidence: no authorship recorded
-  kin/checks-2026-09-05T072335.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-06T210741.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-07T135032.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-10T093022.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-10T111628.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-11T211707.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-12T193225.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-17T064519.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-19T080027.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-19T082702.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-19T114122.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-20T165047.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-20T191845.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-20T205517.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-21T110057.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-24T064859.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-24T171257.yml:
+  front-door-ai/2026-09-17.yml:
+    method: unknown
+    evidence: no authorship recorded
+  kin/checks-2026-09-24T161608.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-08-25T125852.yml:
@@ -246,6 +117,123 @@ artifacts:
   kin/score-2026-09-05T072335.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-05T144739.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-05T195450.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-05T211839.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-06T011047.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-06T211804.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-06T224210.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-07T200636.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-07T213054.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-08T214843.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-08T232836.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-10T204815.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-10T222408.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-12T062655.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-12T080032.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-12T204651.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-12T221936.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-13T214537.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-14T064754.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-14T210656.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-14T225847.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-15T211329.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-15T230249.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-16T210549.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-16T225339.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-17T211151.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-17T233623.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-18T205255.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-18T231945.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-19T165737.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-19T193153.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-20T205903.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-20T232958.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-21T211425.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-21T233935.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-22T213221.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-23T000603.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-24T064009.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-24T090406.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-24T161608.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
   lifecycle/daring-foods-lifecycle.yml:
     method: unknown
     evidence: no authorship recorded
@@ -260,78 +248,6 @@ artifacts:
     evidence: declared in the artifact
   openapi/_original/daring-foods-taxonomy-api-openapi.yml:
     method: derived
-    evidence: declared in the artifact
-  openapi/daring-foods-categories-api-openapi.yml:
-    method: derived
-    evidence: declared in the artifact
-  openapi/daring-foods-comments-api-openapi.yml:
-    method: derived
-    evidence: declared in the artifact
-  openapi/daring-foods-discovery-api-openapi.yml:
-    method: derived
-    evidence: declared in the artifact
-  openapi/daring-foods-foodservice-api-openapi.yml:
-    method: derived
-    evidence: declared in the artifact
-  openapi/daring-foods-media-api-openapi.yml:
-    method: derived
-    evidence: declared in the artifact
-  openapi/daring-foods-metadata-api-openapi.yml:
-    method: derived
-    evidence: declared in the artifact
-  openapi/daring-foods-oembed-api-openapi.yml:
-    method: derived
-    evidence: declared in the artifact
-  openapi/daring-foods-pages-api-openapi.yml:
-    method: derived
-    evidence: declared in the artifact
-  openapi/daring-foods-posts-api-openapi.yml:
-    method: derived
-    evidence: declared in the artifact
-  openapi/daring-foods-products-api-openapi.yml:
-    method: derived
-    evidence: declared in the artifact
-  openapi/daring-foods-recipes-api-openapi.yml:
-    method: derived
-    evidence: declared in the artifact
-  openapi/daring-foods-search-api-openapi.yml:
-    method: derived
-    evidence: declared in the artifact
-  openapi/daring-foods-seo-api-openapi.yml:
-    method: derived
-    evidence: declared in the artifact
-  openapi/daring-foods-tags-api-openapi.yml:
-    method: derived
-    evidence: declared in the artifact
-  overlays/daring-foods-discovery-api-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
-  overlays/daring-foods-foodservice-api-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
-  overlays/daring-foods-media-api-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
-  overlays/daring-foods-oembed-api-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
-  overlays/daring-foods-pages-api-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
-  overlays/daring-foods-posts-api-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
-  overlays/daring-foods-products-api-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
-  overlays/daring-foods-recipes-api-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
-  overlays/daring-foods-search-api-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
-  overlays/daring-foods-seo-api-overlay.yaml:
-    method: generated
     evidence: declared in the artifact
   overlays/daring-foods-taxonomy-api-overlay.yaml:
     method: generated
