@@ -64,5 +64,124 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Daring Foods is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://forgeglobal.com/daring-foods_stock/
+Daring Foods is an American plant-based food company, founded in 2018 by Ross Mackay and Eliott Kessas, that makes 100% plant-based chicken from a deliberately short ingredient list with soy as the protein base. Trading simply as "Daring", it sells retail Plant Chicken in shredded, diced and breaded-pieces formats plus a line of ready-to-heat Plant Chicken Bowls and Plant Chicken Wings through more than 15,000 US grocery stores, and runs a separate foodservice business supplying bulk and gluten-free product to restaurants, campus dining and institutional kitchens. The company raised over $120 million across 2020-2021 during the plant-based protein boom and was acquired by the Australian plant-based meat manufacturer v2food in 2025, under which it retains its own brand. Daring Foods is a consumer packaged goods business, not a software vendor: it operates no developer program, publishes no product API, and offers no portal, SDKs or developer support. The only machine-readable interface it exposes is the WordPress REST content API behind daring.com, which is anonymously readable and unusually well-stocked for a CPG site - 208 recipes classified by cooking method, 14 retail products, 7 foodservice products, 17 marketing pages and a 749-item media library - captured here for discovery purposes.
+
+**Areas:** Company · Food · Consumer Packaged Goods · Plant-Based · Alternative Protein · Food and Beverage · Recipes · Food Service · Grocery
+
+## Daring Foods on APIs.io
+
+Everything profiled for Daring Foods is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/daring-foods/](https://apis.io/providers/daring-foods/)** — or go straight to one of the APIs or properties below.
+
+### APIs (1)
+
+- [Daring Foods Website (WordPress REST)](https://apis.io/apis/daring-foods/daring-com-website-wordpress-rest/) — The public WordPress REST API (wp-json) of the Daring Foods website at daring.com: the route index of the site's content management system, catalogued as…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [daring-foods](https://apis.io/servers/daring-foods/daring-foods/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Daring Foods Agentic Access](https://apis.io/agentic-access/daring-foods/daring-foods-agentic-access/)
+
+#### Collections (14)
+
+Postman and Open Collection request collections.
+
+- [Moved to /providers/daring-foods/](https://apis.io/collections/daring-foods/open-daring-foods-categories-api/)
+- [Moved to /providers/daring-foods/](https://apis.io/collections/daring-foods/open-daring-foods-comments-api/)
+- [Moved to /providers/daring-foods/](https://apis.io/collections/daring-foods/open-daring-foods-discovery-api/)
+- [Moved to /providers/daring-foods/](https://apis.io/collections/daring-foods/open-daring-foods-foodservice-api/)
+- [Moved to /providers/daring-foods/](https://apis.io/collections/daring-foods/open-daring-foods-media-api/)
+- [Moved to /providers/daring-foods/](https://apis.io/collections/daring-foods/open-daring-foods-metadata-api/)
+- [Moved to /providers/daring-foods/](https://apis.io/collections/daring-foods/open-daring-foods-oembed-api/)
+- [Moved to /providers/daring-foods/](https://apis.io/collections/daring-foods/open-daring-foods-pages-api/)
+- [Moved to /providers/daring-foods/](https://apis.io/collections/daring-foods/open-daring-foods-posts-api/)
+- [Moved to /providers/daring-foods/](https://apis.io/collections/daring-foods/open-daring-foods-products-api/)
+- [Moved to /providers/daring-foods/](https://apis.io/collections/daring-foods/open-daring-foods-recipes-api/)
+- [Moved to /providers/daring-foods/](https://apis.io/collections/daring-foods/open-daring-foods-search-api/)
+- [Moved to /providers/daring-foods/](https://apis.io/collections/daring-foods/open-daring-foods-seo-api/)
+- [Moved to /providers/daring-foods/](https://apis.io/collections/daring-foods/open-daring-foods-tags-api/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Daring Foods Taxonomy Api Overlay](https://apis.io/overlays/daring-foods/daring-foods-taxonomy-api-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Daring Foods Authentication](https://apis.io/security/daring-foods/daring-foods-authentication/)
+- [Daring Foods Domain Security](https://apis.io/security/daring-foods/daring-foods-domain-security/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://daring.com/)
+- [Support](https://daring.com/faq/)
+- [Terms of service](https://daring.com/terms-and-conditions/)
+- [Privacy policy](https://privacy.daring.com/privacy-policy)
+
+## API Evangelist rating
+
+**Kin Score 19.8** — emerging · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 64.3 |
+| Contract quality | 6.5 |
+| Contract governance | 4.5 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 28.0 |
+| Access clarity | 21.1 |
+
+**Agent readiness 9.4** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | documented (partial credit) |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 24.5** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/daring-foods/](https://apis.io/providers/daring-foods/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Daring Foods: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/daring-foods/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
